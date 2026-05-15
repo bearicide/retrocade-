@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RETROCADE</title>
+<meta name="theme-color" content="#00ffcc">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#050507;--panel:#101018;--cyan:#00ffcc;--pink:#ff2bd6;--yellow:#ffe66d;--green:#7cff6b;--text:#f7f7ff;}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#17202a 0%,#050507 55%,#000 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;overflow-x:hidden}.scan{position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px);mix-blend-mode:screen;opacity:.35}.wrap{max-width:1180px;margin:0 auto;padding:24px}header{text-align:center;padding:30px 10px 18px}.logo{font-size:clamp(42px,10vw,104px);font-weight:1000;letter-spacing:.06em;line-height:.88;text-shadow:0 0 12px var(--cyan),0 0 32px var(--pink)}.sub{color:#c8fff5;font-size:clamp(16px,3vw,22px);margin-top:12px}.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0}.pill{border:1px solid rgba(0,255,204,.55);background:rgba(0,0,0,.45);border-radius:999px;padding:9px 14px;color:#dffff8;box-shadow:0 0 16px rgba(0,255,204,.12)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:24px}.card{position:relative;background:linear-gradient(145deg,rgba(16,16,28,.96),rgba(4,4,8,.96));border:2px solid rgba(0,255,204,.7);border-radius:20px;padding:18px;min-height:190px;box-shadow:0 0 22px rgba(0,255,204,.15),inset 0 0 18px rgba(255,43,214,.05);overflow:hidden}.card:before{content:"";position:absolute;inset:-70px;background:radial-gradient(circle,rgba(255,43,214,.18),transparent 55%);transform:translate(45%,-30%)}.card h2{position:relative;margin:0 0 8px;font-size:25px}.card p{position:relative;color:#cfd2ff;min-height:44px}.tag{position:relative;color:var(--yellow);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}button{position:relative;width:100%;margin-top:14px;padding:13px;border:0;border-radius:13px;background:linear-gradient(90deg,var(--cyan),var(--green));color:#00110e;font-weight:1000;font-size:15px;cursor:pointer;box-shadow:0 0 18px rgba(0,255,204,.35)}button:hover{filter:brightness(1.12)}.panel{margin-top:24px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(0,0,0,.35);padding:16px;color:#d8d8e8}footer{text-align:center;opacity:.75;padding:28px}.blink{animation:blink 1.4s infinite}@keyframes blink{50%{opacity:.35}}
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<div class="wrap">
+<header>
+<div class="logo">RETROCADE</div>
+<div class="sub">HTML5 arcade room • built by MATTBEAR • live development build</div>
+</header>
+<div class="bar">
+<div class="pill">🪙 Coins: <span id="coins">500</span></div>
+<div class="pill">🎟️ Tickets: <span id="tickets">0</span></div>
+<div class="pill">⭐ Level: <span id="level">1</span></div>
+<div class="pill blink">INSERT CHAOS</div>
+</div>
+<section class="grid" id="grid"></section>
+<section class="panel">
+<strong>Build notes:</strong> live shell is active. Next passes upgrade individual games, shared save data, CRT cabinet room, audio, achievements, and leaderboard hooks.
+</section>
+<footer>bearicide.github.io • RETROCADE is not final and still needs editing.</footer>
+</div>
+<script>
+const games=[
+['snake','Snake','Classic grid goblin.','playable shell'],['breakout','Breakout','Brick-smashing reflex test.','playable shell'],['invaders','Invaders','Tiny space defense chaos.','playable shell'],['asteroids','Asteroids','Float, dodge, blast rocks.','playable shell'],['pong','Pong','Ancient two-paddle ritual.','playable shell'],['claw','Claw Machine','Emotionally rigged prize grabber.','prototype'],['bubble','Bubble Shooter','Color popper puzzle setup.','prototype'],['memory','Memory Match','Flip cards, earn tickets.','prototype'],['racer','Mini Racer','Top-down dodge driver.','prototype'],['rhythm','Rhythm Pads','Tap pads, make noise.','prototype'],['blocks','Falling Blocks','Stack panic simulator.','prototype'],['frog','Frog Dash','Cross the cursed road.','prototype']
+];
+const state=JSON.parse(localStorage.getItem('retrocadeState')||'{"coins":500,"tickets":0,"xp":0}');
+function save(){localStorage.setItem('retrocadeState',JSON.stringify(state));renderStats()}
+function renderStats(){coins.textContent=state.coins;tickets.textContent=state.tickets;level.textContent=Math.max(1,Math.floor((state.xp||0)/100)+1)}
+function launch(id){state.coins=Math.max(0,state.coins-1);state.xp=(state.xp||0)+5;save();location.href='games/'+id+'.html'}
+grid.innerHTML=games.map(g=>`<article class="card"><div class="tag">${g[3]}</div><h2>${g[1]}</h2><p>${g[2]}</p><button onclick="launch('${g[0]}')">PLAY ${g[1].toUpperCase()}</button></article>`).join('');
+renderStats();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}
+</script>
+</body>
+</html>
