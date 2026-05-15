@@ -1,22 +1,34 @@
-const CACHE_NAME='retrocade-v1';
+const CACHE_NAME='retrocade-v2';
 const ASSETS=[
  './',
  './index.html',
  './manifest.json',
- './assets/branding/retrocade-logo.svg'
+ './css/arcade.css',
+ './js/arcade.js',
+ './assets/bg/neon-grid.svg',
+ './assets/branding/retrocade-logo.svg',
+ './assets/icons/icon.svg',
+ './games/snake.html',
+ './games/breakout.html',
+ './games/invaders.html',
+ './games/asteroids.html',
+ './games/pong.html',
+ './games/claw.html',
+ './games/bubble.html',
+ './games/memory.html',
+ './games/racer.html',
+ './games/rhythm.html',
+ './games/blocks.html',
+ './games/frog.html'
 ];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(ASSETS)));
  self.skipWaiting();
 });
 self.addEventListener('activate',event=>{
- event.waitUntil(
-  caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k))))
- );
+ event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))));
  self.clients.claim();
 });
 self.addEventListener('fetch',event=>{
- event.respondWith(
-  caches.match(event.request).then(response=>response||fetch(event.request))
- );
+ event.respondWith(caches.match(event.request).then(response=>response||fetch(event.request)));
 });
