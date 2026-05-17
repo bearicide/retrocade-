@@ -11,9 +11,7 @@ const RetroStore = {
     }
   },
   save: function (state) {
-    try {
-      localStorage.setItem(this.key, JSON.stringify({ ...this.defaults, ...state }));
-    } catch (error) {}
+    try { localStorage.setItem(this.key, JSON.stringify({ ...this.defaults, ...state })); } catch (error) {}
   },
   award: function (tickets, xp, coins, cabinet) {
     const state = this.load();
@@ -30,6 +28,16 @@ const RetroStore = {
   }
 };
 
+function retroLoadAudio() {
+  if (window.RetroAudio || window.__retroAudioLoading) return;
+  window.__retroAudioLoading = true;
+  const script = document.createElement('script');
+  script.src = '../js/audio-manager.js';
+  script.defer = true;
+  script.onerror = function () { console.warn('[RETROCADE] audio manager unavailable'); };
+  document.head.appendChild(script);
+}
+
 const RetroInput = {
   keys: {},
   preventKeys: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Spacebar'],
@@ -41,24 +49,24 @@ const RetroInput = {
       RetroInput.keys[event.key] = true;
       if (RetroInput.preventKeys.includes(event.key)) event.preventDefault();
       if (event.key === '?' || event.key.toLowerCase() === 'h') RetroInput.toggleHelp();
-      if (event.key === 'Escape') RetroInput.closeHelp();
+      if (event.key === 'Escape') {
+        RetroInput.closeHelp();
+        RetroState.close();
+      }
     }, { passive: false });
 
-    document.addEventListener('keyup', function (event) {
-      RetroInput.keys[event.key] = false;
-    });
+    document.addEventListener('keyup', function (event) { RetroInput.keys[event.key] = false; });
 
     window.addEventListener('blur', function () {
       RetroInput.keys = {};
-      document.querySelectorAll('.is-pressed').forEach(function (button) {
-        button.classList.remove('is-pressed');
-      });
+      document.querySelectorAll('.is-pressed').forEach(function (button) { button.classList.remove('is-pressed'); });
     });
 
     document.addEventListener('pointerdown', function (event) {
       const button = event.target.closest('button, .arcade-btn, .touch-btn');
       if (!button) return;
       button.classList.add('is-pressed');
+      if (window.RetroAudio) RetroAudio.click();
     }, true);
 
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (type) {
@@ -73,9 +81,7 @@ const RetroInput = {
     document.body.classList.add('retrocade-controls-ready');
 
     document.querySelectorAll('button, .arcade-btn, .touch-btn').forEach(function (button) {
-      if (!button.getAttribute('aria-label')) {
-        button.setAttribute('aria-label', button.textContent.trim() || 'Arcade control');
-      }
+      if (!button.getAttribute('aria-label')) button.setAttribute('aria-label', button.textContent.trim() || 'Arcade control');
       button.setAttribute('draggable', 'false');
     });
 
@@ -106,6 +112,7 @@ const RetroInput = {
     }
 
     this.mountHelp(title);
+    RetroState.mount();
   },
   mountHelp: function (title) {
     if (document.getElementById('retro-help')) return;
@@ -129,7 +136,44 @@ const RetroInput = {
   }
 };
 
+const RetroState = {
+  mount: function () {
+    if (document.getElementById('retro-state')) return;
+    const overlay = document.createElement('aside');
+    overlay.id = 'retro-state';
+    overlay.className = 'retro-state';
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = '<div class="retro-state-card"><h1 id="retro-state-title">READY</h1><p id="retro-state-sub">PRESS START</p></div>';
+    document.body.appendChild(overlay);
+  },
+  show: function (title, sub, type, ms) {
+    this.mount();
+    const overlay = document.getElementById('retro-state');
+    const heading = document.getElementById('retro-state-title');
+    const text = document.getElementById('retro-state-sub');
+    if (!overlay || !heading || !text) return;
+    overlay.className = 'retro-state show ' + (type || '');
+    overlay.setAttribute('aria-hidden', 'false');
+    heading.textContent = title || 'READY';
+    text.textContent = sub || '';
+    clearTimeout(window.__retroStateTimer);
+    if (ms !== 0) window.__retroStateTimer = setTimeout(function () { RetroState.close(); }, ms || 1100);
+    if (window.RetroAudio) {
+      if (type === 'bigwin') RetroAudio.bigWin();
+      else if (type === 'danger') RetroAudio.gameOver();
+      else RetroAudio.confirm();
+    }
+  },
+  close: function () {
+    const overlay = document.getElementById('retro-state');
+    if (!overlay) return;
+    overlay.classList.remove('show');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+};
+
 function retroHeader(title) {
+  retroLoadAudio();
   const bar = document.createElement('div');
   bar.className = 'top';
   bar.innerHTML = '<a href="../index.html">RETROCADE</a><b>' + title + '</b><span id="hud"></span><button class="help-toggle" type="button" onclick="RetroInput.toggleHelp()" aria-label="Show controls">?</button>';
@@ -162,38 +206,27 @@ function retroWin(tickets, xp, coins, cabinet) {
   const state = RetroStore.award(tickets || 10, xp || 20, coins || 0, cabinet || 'cabinet');
   retroHud();
   retroToast('+' + (tickets || 10) + ' tickets  +' + (xp || 20) + ' XP' + ((coins || 0) ? '  +' + coins + ' coins' : ''));
+  if ((tickets || 0) >= 20 || (coins || 0) > 0) RetroState.show('BIG WIN', '+' + (tickets || 10) + ' TICKETS', 'bigwin', 900);
   return state;
 }
 
 function retroCanvasPoint(canvas, event) {
   const rect = canvas.getBoundingClientRect();
   const source = event.touches && event.touches[0] ? event.touches[0] : event;
-  return {
-    x: ((source.clientX - rect.left) / rect.width) * canvas.width,
-    y: ((source.clientY - rect.top) / rect.height) * canvas.height
-  };
+  return { x: ((source.clientX - rect.left) / rect.width) * canvas.width, y: ((source.clientY - rect.top) / rect.height) * canvas.height };
 }
 
 function retroBindHold(button, down, up) {
   if (!button) return;
   const release = up || function () {};
-  button.addEventListener('pointerdown', function (event) {
-    event.preventDefault();
-    button.classList.add('is-pressed');
-    down(event);
-  });
+  button.addEventListener('pointerdown', function (event) { event.preventDefault(); button.classList.add('is-pressed'); down(event); });
   button.addEventListener('pointerup', function (event) { button.classList.remove('is-pressed'); release(event); });
   button.addEventListener('pointerleave', function (event) { button.classList.remove('is-pressed'); release(event); });
   button.addEventListener('pointercancel', function (event) { button.classList.remove('is-pressed'); release(event); });
 }
 
 function retroSafeBoot(label, fn) {
-  try {
-    fn();
-  } catch (error) {
-    console.error('[RETROCADE]', label, error);
-    retroToast('CABINET BOOT ERROR - patched mode needed');
-  }
+  try { fn(); } catch (error) { console.error('[RETROCADE]', label, error); retroToast('CABINET BOOT ERROR - patched mode needed'); }
 }
 
 window.addEventListener('error', function (event) {
