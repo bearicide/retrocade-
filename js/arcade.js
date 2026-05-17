@@ -1,84 +1,13 @@
-const RetroStore = {
-  key: 'retrocadeState',
-  defaults: { coins: 500, tickets: 0, xp: 0, plays: 0, wins: 0, cabinets: {} },
-  load: function () {
-    try {
-      const raw = localStorage.getItem(this.key);
-      const saved = raw ? JSON.parse(raw) : {};
-      return { ...this.defaults, ...saved, cabinets: { ...this.defaults.cabinets, ...(saved.cabinets || {}) } };
-    } catch (error) { return { ...this.defaults }; }
-  },
-  save: function (state) { try { localStorage.setItem(this.key, JSON.stringify({ ...this.defaults, ...state })); } catch (error) {} },
-  award: function (tickets, xp, coins, cabinet) {
-    const state = this.load();
-    state.tickets = Math.max(0, (state.tickets || 0) + (tickets || 0));
-    state.xp = Math.max(0, (state.xp || 0) + (xp || 0));
-    state.coins = Math.max(0, (state.coins || 0) + (coins || 0));
-    state.plays = (state.plays || 0) + 1;
-    if (cabinet) { state.cabinets = state.cabinets || {}; state.cabinets[cabinet] = (state.cabinets[cabinet] || 0) + 1; }
-    this.save(state);
-    return state;
-  }
-};
-
-(function mountGlobalTheme(){
-  if(document.getElementById('retrocade-theme-layer')) return;
-  const link=document.createElement('link');
-  link.id='retrocade-theme-layer';
-  link.rel='stylesheet';
-  link.href='../css/retrocade-theme.css';
-  document.head.appendChild(link);
-})();
-
-function retroLoadAudio() {
-  if (window.RetroAudio || window.__retroAudioLoading) return;
-  window.__retroAudioLoading = true;
-  const script = document.createElement('script');
-  script.src = '../js/audio-manager.js';
-  script.defer = true;
-  script.onerror = function () { console.warn('[RETROCADE] audio manager unavailable'); };
-  document.head.appendChild(script);
-}
-
-function retroLoadPass3() {
-  if (window.RetroPass3 || window.__retroPass3Loading) return;
-  window.__retroPass3Loading = true;
-  const script = document.createElement('script');
-  script.src = '../js/pass3-system.js';
-  script.defer = true;
-  script.onload = function () { if (window.RetroPass3 && RetroPass3.attract) RetroPass3.attract(); };
-  script.onerror = function () { console.warn('[RETROCADE] pass3 system unavailable'); };
-  document.head.appendChild(script);
-}
-
-const RetroCabinet = {
-  brand: 'b e a r i c i d e . g i t h u b . i o',
-  moods: {
-    SNAKE: ['NEON BIOHAZARD', 'TAIL RITUAL', 'DIGEST THE SIGNAL'],
-    BREAKOUT: ['LASER CHAMBER', 'BRICK VIOLENCE', 'IMPACT ENGINE'],
-    INVADERS: ['ALIEN SIGNAL WAR', 'SKY BREACH', 'DEFEND THE SIGNAL'],
-    PONG: ['HYPNOTIC WAR', 'TWO PADDLES ENTER', 'VECTOR DUEL'],
-    RACER: ['NEON ROAD FEVER', 'ILLEGAL NIGHT DRIVE', 'NO BRAKES'],
-    CLAW: ['PRIZE CULT', 'GRAB OR BE GRABBED', 'EMOTIONAL DAMAGE'],
-    BUBBLE: ['POP CHEMISTRY', 'COLOR PANIC', 'GLASS CANDY'],
-    MEMORY: ['CRT AMNESIA', 'REMEMBER WRONG', 'SIGNAL RECALL'],
-    RHYTHM: ['SPEAKER RITUAL', 'BUTTONS BECOME DRUMS', 'NOISE TEMPLE'],
-    BLOCKS: ['REACTOR STACK', 'FALLING PANIC', 'GRID PRESSURE'],
-    FROG: ['CURSED CROSSING', 'ROAD DOOM', 'HOP OR DROP']
-  },
-  mountBranding: function (title) {
-    if (document.querySelector('.retro-brand-stripe')) return;
-    const stripe = document.createElement('div');
-    stripe.className = 'retro-brand-stripe';
-    stripe.textContent = this.brand + '   •   ' + title + '   •   ' + this.brand;
-    document.body.appendChild(stripe);
-    const cornerA = document.createElement('div');
-    cornerA.className = 'retro-corner-brand left';
-    cornerA.textContent = this.brand;
-    const cornerB = document.createElement('div');
-    cornerB.className = 'retro-corner-brand right';
-    cornerB.textContent = this.brand;
-    document.body.appendChild(cornerA);
-    document.body.appendChild(cornerB);
-  }
-};
+const RetroStore={key:'retrocadeState',defaults:{coins:500,tickets:0,xp:0,plays:0,wins:0,cabinets:{}},load(){try{return{...this.defaults,...JSON.parse(localStorage.getItem(this.key)||'{}')}}catch(e){return{...this.defaults}}},save(s){localStorage.setItem(this.key,JSON.stringify({...this.defaults,...s}))},award(t=0,x=0,c=0,cab='cabinet'){const s=this.load();s.tickets=(s.tickets||0)+t;s.xp=(s.xp||0)+x;s.coins=(s.coins||0)+c;s.plays=(s.plays||0)+1;s.cabinets=s.cabinets||{};s.cabinets[cab]=(s.cabinets[cab]||0)+1;this.save(s);return s}};
+(function(){if(document.getElementById('retrocade-theme-layer'))return;const l=document.createElement('link');l.id='retrocade-theme-layer';l.rel='stylesheet';l.href='../css/retrocade-theme.css';document.head.appendChild(l)})();
+function retroLoad(src){const s=document.createElement('script');s.src=src;s.defer=true;document.head.appendChild(s)}
+function retroLoadAudio(){if(!window.RetroAudio&&!window.__ra){window.__ra=1;retroLoad('../js/audio-manager.js')}}
+function retroLoadPass3(){if(!window.RetroPass3&&!window.__rp3){window.__rp3=1;retroLoad('../js/pass3-system.js')}}
+const RetroCabinet={brand:'b e a r i c i d e . g i t h u b . i o',signal(txt,type=''){const d=document.createElement('div');d.className='retro-signal '+type;d.textContent=txt||this.brand;d.style.cssText='position:fixed;top:76px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(0,0,0,.9);border:2px solid #00ffcc;border-radius:999px;padding:10px 18px;color:#ffe66d;font-weight:1000;box-shadow:0 0 20px rgba(255,43,214,.4)';document.body.appendChild(d);setTimeout(()=>d.remove(),1200)}};
+const RetroState={mount(){if(document.getElementById('retro-state'))return;const d=document.createElement('div');d.id='retro-state';d.style.cssText='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:998;opacity:0;transition:.2s';d.innerHTML='<div class="retro-state-card" style="padding:28px 38px;border-radius:28px;background:rgba(0,0,0,.82);border:2px solid #00ffcc;text-align:center"><h1 id="retro-state-title" style="margin:0;color:#ffe66d">READY</h1><p id="retro-state-sub" style="margin:10px 0 0;color:#f7f7ff">PRESS START</p></div>';document.body.appendChild(d)},show(t,s,type='',ms=1000){this.mount();const d=document.getElementById('retro-state');document.getElementById('retro-state-title').textContent=t||'READY';document.getElementById('retro-state-sub').textContent=s||'';d.style.opacity='1';clearTimeout(window.__retroState);window.__retroState=setTimeout(()=>this.close(),ms)},close(){const d=document.getElementById('retro-state');if(d)d.style.opacity='0'}};
+const RetroInput={toggleHelp(){const h=document.getElementById('retro-help');if(h)h.classList.toggle('open')},closeHelp(){const h=document.getElementById('retro-help');if(h)h.classList.remove('open')}};
+function retroHeader(title){retroLoadAudio();retroLoadPass3();const top=document.createElement('div');top.className='top';top.innerHTML='<a href="../index.html">RETROCADE</a><b>'+title+'</b><span id="hud"></span><button class="help-toggle" onclick="RetroInput.toggleHelp()">?</button>';document.body.prepend(top);const help=document.createElement('div');help.id='retro-help';help.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.2s;z-index:997';help.innerHTML='<div class="retro-help-card" style="padding:24px;border-radius:24px;background:#050507;border:2px solid #00ffcc;max-width:420px"><h2 style="color:#ffe66d">'+title+' CONTROLS</h2><p>WASD / Arrows / Touch Controls</p><p>ESC closes overlays.</p></div>';document.body.appendChild(help);const style=document.createElement('style');style.textContent='#retro-help.open{opacity:1!important;pointer-events:auto!important}';document.head.appendChild(style);retroHud()}
+function retroHud(){const s=RetroStore.load(),h=document.getElementById('hud');if(h)h.textContent='Coins '+(s.coins||0)+' | Tickets '+(s.tickets||0)+' | Level '+(Math.floor((s.xp||0)/100)+1)}
+function retroToast(t){let d=document.getElementById('retro-toast');if(!d){d=document.createElement('div');d.id='retro-toast';d.style.cssText='position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:999;background:rgba(0,0,0,.88);border:2px solid #00ffcc;border-radius:999px;padding:12px 18px;color:#ffe66d;font-weight:1000';document.body.appendChild(d)}d.textContent=t;d.style.opacity='1';clearTimeout(window.__toast);window.__toast=setTimeout(()=>d.style.opacity='0',1200)}
+function retroWin(t=1,x=1,c=0,cab='cabinet'){RetroStore.award(t,x,c,cab);retroHud();retroToast('+'+t+' tickets  +'+x+' XP'+(c?'  +'+c+' coins':''));if(t>=20)RetroState.show('BIG WIN','JACKPOT ENERGY','bigwin',900)}
+window.addEventListener('error',e=>{console.error('[RETROCADE]',e.error||e.message);retroToast('CABINET GLITCH CAUGHT')});
