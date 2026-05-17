@@ -1,4 +1,4 @@
-const CACHE_NAME='retrocade-v7-theme-pass';
+const CACHE_NAME='retrocade-v8-scale-3x-power-scan';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
 './css/arcade.css','./css/retrocade-theme.css',
