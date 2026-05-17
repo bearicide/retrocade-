@@ -1,8 +1,9 @@
-const CACHE_NAME = 'retrocade-v4-motion-pass';
+const CACHE_NAME = 'retrocade-v5-admin-control-fix';
 
 const CORE_ASSETS = [
   './',
   './index.html',
+  './admin.html',
   './manifest.json',
   './css/arcade.css',
   './js/arcade.js',
@@ -27,9 +28,7 @@ const CORE_ASSETS = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      Promise.allSettled(
-        CORE_ASSETS.map(asset => cache.add(asset))
-      )
+      Promise.allSettled(CORE_ASSETS.map(asset => cache.add(asset)))
     )
   );
   self.skipWaiting();
@@ -38,11 +37,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      )
+      Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
     )
   );
   self.clients.claim();
