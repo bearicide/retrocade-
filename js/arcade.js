@@ -30,12 +30,112 @@ const RetroStore = {
   }
 };
 
+const RetroInput = {
+  keys: {},
+  preventKeys: ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Spacebar'],
+  init: function () {
+    if (window.__retroInputReady) return;
+    window.__retroInputReady = true;
+
+    document.addEventListener('keydown', function (event) {
+      RetroInput.keys[event.key] = true;
+      if (RetroInput.preventKeys.includes(event.key)) event.preventDefault();
+      if (event.key === '?' || event.key.toLowerCase() === 'h') RetroInput.toggleHelp();
+      if (event.key === 'Escape') RetroInput.closeHelp();
+    }, { passive: false });
+
+    document.addEventListener('keyup', function (event) {
+      RetroInput.keys[event.key] = false;
+    });
+
+    window.addEventListener('blur', function () {
+      RetroInput.keys = {};
+      document.querySelectorAll('.is-pressed').forEach(function (button) {
+        button.classList.remove('is-pressed');
+      });
+    });
+
+    document.addEventListener('pointerdown', function (event) {
+      const button = event.target.closest('button, .arcade-btn, .touch-btn');
+      if (!button) return;
+      button.classList.add('is-pressed');
+    }, true);
+
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (type) {
+      document.addEventListener(type, function (event) {
+        const button = event.target.closest('button, .arcade-btn, .touch-btn');
+        if (button) button.classList.remove('is-pressed');
+      }, true);
+    });
+  },
+  enhanceControls: function (title) {
+    this.init();
+    document.body.classList.add('retrocade-controls-ready');
+
+    document.querySelectorAll('button, .arcade-btn, .touch-btn').forEach(function (button) {
+      if (!button.getAttribute('aria-label')) {
+        button.setAttribute('aria-label', button.textContent.trim() || 'Arcade control');
+      }
+      button.setAttribute('draggable', 'false');
+    });
+
+    document.querySelectorAll('[data-dir]').forEach(function (button) {
+      const dir = button.dataset.dir || button.textContent.trim();
+      button.classList.add('direction-control');
+      button.setAttribute('aria-label', 'Move ' + dir);
+    });
+
+    const touch = document.querySelector('.touch-controls');
+    if (touch) {
+      touch.setAttribute('aria-label', title + ' arcade controls');
+      touch.setAttribute('role', 'group');
+      if (!touch.querySelector('.control-hint')) {
+        const hint = document.createElement('div');
+        hint.className = 'control-hint';
+        hint.textContent = 'Keyboard: WASD / Arrows • Touch: big glowing controls';
+        touch.appendChild(hint);
+      }
+    }
+
+    const note = document.querySelector('.note');
+    if (note && !note.querySelector('.control-chip')) {
+      const chip = document.createElement('span');
+      chip.className = 'control-chip';
+      chip.textContent = 'Controls';
+      note.prepend(chip);
+    }
+
+    this.mountHelp(title);
+  },
+  mountHelp: function (title) {
+    if (document.getElementById('retro-help')) return;
+    const help = document.createElement('aside');
+    help.id = 'retro-help';
+    help.setAttribute('aria-hidden', 'true');
+    help.innerHTML = '<div class="retro-help-card"><button class="retro-help-close" type="button" onclick="RetroInput.closeHelp()">×</button><strong>' + title + ' CONTROLS</strong><p><b>Move:</b> WASD / Arrow Keys / Touch Buttons</p><p><b>Main Action:</b> Space / Enter / Big glowing button</p><p><b>Help:</b> H or ?</p><p><b>Back:</b> RETROCADE top-left link</p></div>';
+    document.body.appendChild(help);
+  },
+  toggleHelp: function () {
+    const help = document.getElementById('retro-help');
+    if (!help) return;
+    const isOpen = help.classList.toggle('open');
+    help.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+  },
+  closeHelp: function () {
+    const help = document.getElementById('retro-help');
+    if (!help) return;
+    help.classList.remove('open');
+    help.setAttribute('aria-hidden', 'true');
+  }
+};
+
 function retroHeader(title) {
   const bar = document.createElement('div');
   bar.className = 'top';
-  bar.innerHTML = '<a href="../index.html">RETROCADE</a><b>' + title + '</b><span id="hud"></span>';
+  bar.innerHTML = '<a href="../index.html">RETROCADE</a><b>' + title + '</b><span id="hud"></span><button class="help-toggle" type="button" onclick="RetroInput.toggleHelp()" aria-label="Show controls">?</button>';
   document.body.prepend(bar);
   retroHud();
+  setTimeout(function () { RetroInput.enhanceControls(title); }, 0);
 }
 
 function retroHud() {
@@ -77,10 +177,14 @@ function retroCanvasPoint(canvas, event) {
 function retroBindHold(button, down, up) {
   if (!button) return;
   const release = up || function () {};
-  button.addEventListener('pointerdown', function (event) { event.preventDefault(); down(event); });
-  button.addEventListener('pointerup', release);
-  button.addEventListener('pointerleave', release);
-  button.addEventListener('pointercancel', release);
+  button.addEventListener('pointerdown', function (event) {
+    event.preventDefault();
+    button.classList.add('is-pressed');
+    down(event);
+  });
+  button.addEventListener('pointerup', function (event) { button.classList.remove('is-pressed'); release(event); });
+  button.addEventListener('pointerleave', function (event) { button.classList.remove('is-pressed'); release(event); });
+  button.addEventListener('pointercancel', function (event) { button.classList.remove('is-pressed'); release(event); });
 }
 
 function retroSafeBoot(label, fn) {
