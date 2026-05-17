@@ -1,4 +1,4 @@
-const CACHE_NAME = 'retrocade-v3-main-cache-fix';
+const CACHE_NAME = 'retrocade-v4-motion-pass';
 
 const CORE_ASSETS = [
   './',
@@ -9,6 +9,7 @@ const CORE_ASSETS = [
   './assets/bg/neon-grid.svg',
   './assets/branding/retrocade-logo.svg',
   './assets/icons/icon.svg',
+  './assets/ui/mb-ui-control-kit.svg',
   './games/snake.html',
   './games/breakout.html',
   './games/invaders.html',
