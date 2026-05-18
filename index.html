@@ -1,1 +1,277 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Retrocade | MATTBEAR Arcade Network</title><meta name="theme-color" content="#00ffcc"><meta name="description" content="Retrocade - neon arcade shell by MATTBEAR"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg"><style>:root{--bg:#050507;--panel:#101018;--cyan:#00ffcc;--pink:#ff2bd6;--yellow:#ffe66d;--green:#7cff6b;--orange:#ff9f1c;--purple:#9b5cff;--text:#f7f7ff}*{box-sizing:border-box}body{margin:0;background:#000 url('assets/bg/neon-grid.svg') center/cover fixed no-repeat;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}body:before{content:'';position:fixed;inset:-25%;z-index:-2;background:radial-gradient(circle at 20% 20%,rgba(255,43,214,.2),transparent 28%),radial-gradient(circle at 80% 15%,rgba(0,255,204,.18),transparent 30%),radial-gradient(circle at 50% 80%,rgba(124,255,107,.12),transparent 28%);animation:ambientDrift 14s ease-in-out infinite alternate}.scan,.flashwash{position:fixed;inset:0;pointer-events:none}.scan{z-index:30;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px);mix-blend-mode:screen;opacity:.35;animation:scanBreath 3.8s ease-in-out infinite}.flashwash{z-index:20;background:radial-gradient(circle at 50% 8%,rgba(255,230,109,.25),transparent 18%),linear-gradient(90deg,rgba(0,255,204,.12),rgba(255,43,214,.11),rgba(124,255,107,.1));mix-blend-mode:screen;opacity:0;animation:roomFlash 7s steps(1,end) infinite}.wrap{max-width:1180px;margin:0 auto;padding:24px;position:relative;z-index:2}.toplinks{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 20px}.toplinks a,.footer-links a,.mini-link{border:1px solid rgba(0,255,204,.48);background:rgba(0,0,0,.48);border-radius:999px;padding:9px 13px;color:#dffff8;text-decoration:none;font-weight:800;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 0 16px rgba(0,255,204,.12);transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}.toplinks a:hover,.footer-links a:hover,.mini-link:hover{transform:translateY(-2px);background:rgba(0,255,204,.12);border-color:rgba(0,255,204,.78);box-shadow:0 0 20px rgba(0,255,204,.22)}header{text-align:center;padding:20px 10px 18px}.sub{color:#c8fff5;font-size:clamp(16px,3vw,22px);margin-top:12px;text-shadow:0 0 16px rgba(0,255,204,.25)}.hero-logo{width:min(680px,92vw);margin:0 auto 18px;display:block;filter:drop-shadow(0 0 28px rgba(0,255,204,.35));animation:marqueeFloat 4.5s ease-in-out infinite}.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0}.pill{border:1px solid rgba(0,255,204,.55);background:rgba(0,0,0,.45);border-radius:999px;padding:9px 14px;color:#dffff8;box-shadow:0 0 16px rgba(0,255,204,.12);animation:softGlow 3.2s ease-in-out infinite}.player-shell{margin:18px auto 6px;max-width:720px;border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:10px;background:linear-gradient(145deg,rgba(16,16,28,.86),rgba(0,0,0,.72));box-shadow:0 0 26px rgba(255,43,214,.16),inset 0 0 18px rgba(0,255,204,.06)}.player-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;color:#dffff8;font-size:12px;text-transform:uppercase;letter-spacing:.11em}.player-frame{width:100%;height:96px;border:0;border-radius:12px;background:#050507;filter:saturate(1.15) contrast(1.05)}.admin{margin-top:14px;border:1px dashed rgba(255,230,109,.35);border-radius:16px;background:rgba(0,0,0,.36);padding:12px;text-align:left}.admin summary{cursor:pointer;color:#ffe66d;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.admin-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}.admin input{width:100%;border:1px solid rgba(0,255,204,.4);border-radius:12px;background:rgba(0,0,0,.62);color:#fff;padding:11px}.admin button{width:auto;margin:0;padding:11px 13px}.hint{color:#cfd2ff;font-size:12px;margin:8px 0 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:24px}.card{position:relative;background:linear-gradient(145deg,rgba(16,16,28,.96),rgba(4,4,8,.96));border:2px solid rgba(0,255,204,.7);border-radius:20px;padding:18px;min-height:208px;box-shadow:0 0 22px rgba(0,255,204,.15),inset 0 0 18px rgba(255,43,214,.05);overflow:hidden;transform:translateY(0);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;animation:cardBoot .5s ease both, cabinetBlink 4.7s steps(1,end) infinite}.card:nth-child(2n){animation-delay:.04s,.7s}.card:nth-child(3n){animation-delay:.08s,1.2s}.card:nth-child(4n){animation-delay:.12s,1.8s}.card:hover{transform:translateY(-6px) scale(1.015);border-color:rgba(255,230,109,.8);box-shadow:0 0 44px rgba(0,255,204,.36),0 0 68px rgba(255,43,214,.22),inset 0 0 28px rgba(255,230,109,.1)}.card:before{content:'';position:absolute;inset:-70px;background:radial-gradient(circle,rgba(255,43,214,.2),transparent 55%);transform:translate(45%,-30%);animation:cardLight 5s ease-in-out infinite alternate}.card:after{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,transparent,var(--cyan),var(--pink),var(--yellow),transparent);opacity:.85;animation:sweep 2.2s linear infinite}.card h2{position:relative;margin:0 0 8px;font-size:25px;text-shadow:0 0 16px rgba(0,255,204,.28)}.card p{position:relative;color:#cfd2ff;min-height:44px}.tag{position:relative;color:var(--yellow);font-size:13px;font-weight:800;letter-spacing:.08em}.card .status{position:relative;display:inline-flex;align-items:center;gap:6px;margin-top:6px;color:#7cff6b;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.card .status:before{content:'';width:8px;height:8px;border-radius:50%;background:#7cff6b;box-shadow:0 0 12px #7cff6b;animation:blink 1.4s infinite}button{position:relative;width:100%;margin-top:14px;padding:15px 14px;border:0;border-radius:16px;background:linear-gradient(180deg,#ffe66d,#ffb300 52%,#ff2bd6);color:#160014;font-weight:1000;font-size:15px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,.6),0 0 24px rgba(255,43,214,.34),inset 0 2px 10px rgba(255,255,255,.45);transition:transform .1s ease,filter .18s ease,box-shadow .18s ease}button:before{content:'';position:absolute;left:10%;right:10%;top:8%;height:28%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,0));pointer-events:none}button:hover{filter:brightness(1.12);box-shadow:0 9px 0 rgba(0,0,0,.6),0 0 36px rgba(255,43,214,.54),inset 0 2px 10px rgba(255,255,255,.55)}button:active{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.7),0 0 20px rgba(255,230,109,.4)}.panel{margin-top:24px;border:1px solid rgba(255,255,255,.16);border-radius:18px;background:rgba(0,0,0,.35);padding:16px;color:#d8d8e8;box-shadow:inset 0 0 26px rgba(0,255,204,.06)}footer{text-align:center;opacity:.9;padding:28px}.footer-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}.blink{animation:blink 1.4s infinite}@keyframes blink{50%{opacity:.35}}@keyframes ambientDrift{from{transform:translate3d(-2%,0,0) rotate(0deg)}to{transform:translate3d(2%,2%,0) rotate(4deg)}}@keyframes scanBreath{0%,100%{opacity:.26}50%{opacity:.42}}@keyframes roomFlash{0%,86%,100%{opacity:0}87%{opacity:.65}88%{opacity:.08}89%{opacity:.4}90%{opacity:0}}@keyframes marqueeFloat{0%,100%{transform:translateY(0);filter:drop-shadow(0 0 24px rgba(0,255,204,.33))}50%{transform:translateY(-5px);filter:drop-shadow(0 0 42px rgba(255,43,214,.42))}}@keyframes softGlow{0%,100%{box-shadow:0 0 16px rgba(0,255,204,.12)}50%{box-shadow:0 0 24px rgba(255,43,214,.18)}}@keyframes cardBoot{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes cabinetBlink{0%,92%,100%{filter:none}93%{filter:brightness(1.85) saturate(1.7)}94%{filter:brightness(.72)}95%{filter:brightness(1.35) saturate(1.3)}}@keyframes cardLight{from{transform:translate(45%,-30%)}to{transform:translate(20%,-10%)}}@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}@media(max-width:700px){.wrap{padding:14px}.card{min-height:190px}.toplinks,.footer-links{display:grid}.toplinks a,.footer-links a{width:100%}.admin-row{grid-template-columns:1fr}.admin button{width:100%}.player-frame{height:116px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.flashwash{display:none}}</style></head><body><div class="flashwash"></div><div class="scan"></div><div class="wrap"><nav class="toplinks" aria-label="Retrocade navigation"><a href="https://bearicide.github.io/">Main Portal</a><a href="https://bearicide.github.io/examples/">Examples</a><a href="https://bearicide.github.io/MATTBEARCADE/">MATTBEARCADE</a><a href="https://bearicide.github.io/music-toys/">Music Toys</a></nav><header><img class="hero-logo" src="assets/branding/retrocade-logo.svg" alt="Retrocade"><div class="sub">HTML5 arcade room • built by MATTBEAR • neon shell online</div><section class="player-shell" aria-label="MATTBEAR mini player"><div class="player-head"><strong>Now playing / mini-player</strong><a class="mini-link" href="https://soundcloud.com/mattbear86" target="_blank" rel="noopener">SoundCloud</a></div><iframe id="scPlayer" class="player-frame" title="MATTBEAR SoundCloud mini-player" allow="autoplay" src=""></iframe><details class="admin"><summary>Admin panel / set mini-player track</summary><div class="admin-row"><input id="trackUrl" placeholder="Paste SoundCloud track, playlist, or profile URL"><button onclick="saveTrack()">Save Track</button></div><p class="hint">Static-safe now: saves this browser’s mini-player source. Backend upload/admin wiring can connect here later.</p></details></section></header><div class="bar"><div class="pill">🪙 Coins: <span id="coins">500</span></div><div class="pill">🎟️ Tickets: <span id="tickets">0</span></div><div class="pill">⭐ Level: <span id="level">1</span></div><div class="pill blink">Insert chaos</div></div><section class="grid" id="grid"></section><section class="panel"><strong>Build notes:</strong> functioning multi-cabinet neon arcade shell with persistent save data, mobile controls, PWA support, flashing cabinet lights, SoundCloud mini-player slot, admin-ready media setting, and expanding game systems.</section><footer><strong>RETROCADE arcade network</strong><div class="footer-links"><a href="https://bearicide.github.io/">Main Portal</a><a href="https://bearicide.github.io/MATTBEARCADE/">MATTBEARCADE</a><a href="https://bearicide.github.io/examples/">Examples Showcase</a><a href="https://github.com/bearicide/retrocade-">Source</a></div></footer></div><script>const DEFAULT_SC='https://soundcloud.com/mattbear86';const games=[['snake','Snake','Classic grid goblin.','Live cabinet'],['breakout','Breakout','Brick-smashing reflex test.','Live cabinet'],['invaders','Invaders','Tiny space defense chaos.','Live cabinet'],['asteroids','Asteroids','Float, dodge, blast rocks.','Live cabinet'],['pong','Pong','Ancient two-paddle ritual.','Live cabinet'],['claw','Claw Machine','Emotionally rigged prize grabber.','Live cabinet'],['bubble','Bubble Shooter','Color popper puzzle setup.','Live cabinet'],['memory','Memory Match','Flip cards, earn tickets.','Live cabinet'],['racer','Mini Racer','Top-down dodge driver.','Live cabinet'],['rhythm','Rhythm Pads','Tap pads, make noise.','Live cabinet'],['blocks','Falling Blocks','Stack panic simulator.','Live cabinet'],['frog','Frog Dash','Cross the cursed road.','Live cabinet']];const state=JSON.parse(localStorage.getItem('retrocadeState')||'{"coins":500,"tickets":0,"xp":0}');function scEmbed(url){return 'https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&color=%2300ffcc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false'}function loadPlayer(){const saved=localStorage.getItem('retrocadeMiniPlayerUrl')||DEFAULT_SC;trackUrl.value=saved;scPlayer.src=scEmbed(saved)}function saveTrack(){const v=trackUrl.value.trim()||DEFAULT_SC;localStorage.setItem('retrocadeMiniPlayerUrl',v);scPlayer.src=scEmbed(v)}function save(){localStorage.setItem('retrocadeState',JSON.stringify(state));renderStats()}function renderStats(){coins.textContent=state.coins;tickets.textContent=state.tickets;level.textContent=Math.max(1,Math.floor((state.xp||0)/100)+1)}function launch(id){state.coins=Math.max(0,state.coins-1);state.xp=(state.xp||0)+5;save();location.href='games/'+id+'.html'}grid.innerHTML=games.map(g=>`<article class="card"><div class="tag">${g[3]}</div><h2>${g[1]}</h2><p>${g[2]}</p><div class="status">Ready</div><button onclick="launch('${g[0]}')">Play ${g[1]}</button></article>`).join('');renderStats();loadPlayer();if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RETROCADE | MATTBEAR Arcade Network</title>
+<meta name="theme-color" content="#07090f">
+<meta name="description" content="RETROCADE - a clean neon arcade launcher by MATTBEAR.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg">
+<style>
+:root{
+  --bg:#07090f;
+  --panel:#101622;
+  --panel-2:#0b1019;
+  --line:rgba(255,255,255,.14);
+  --line-hot:rgba(0,255,204,.5);
+  --cyan:#00ffcc;
+  --pink:#ff2bd6;
+  --yellow:#ffe66d;
+  --green:#7cff6b;
+  --text:#f7f7ff;
+  --muted:#b7c2d8;
+  --shadow:0 18px 42px rgba(0,0,0,.34);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(0,255,204,.13),transparent 30%),
+    radial-gradient(circle at 82% 10%,rgba(255,43,214,.1),transparent 32%),
+    linear-gradient(180deg,#05070c 0%,#0b1019 48%,#05070c 100%);
+  color:var(--text);
+  font-family:Bahnschrift,'Arial Narrow',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{touch-action:manipulation}
+.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto}
+.site-nav{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(7,9,15,.94);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;flex-wrap:wrap}
+.brand{font-size:1rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+.rainbow{background:linear-gradient(90deg,#ff3131,#ff9f1c,#fff500,#9cff00,#00e5ff,#5865ff,#d946ef);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-links{display:flex;gap:8px;flex-wrap:wrap}
+.nav-links a,.mini-link,.footer-links a{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 13px;
+  background:rgba(255,255,255,.045);
+  color:#eafffb;
+  font-size:.82rem;
+  font-weight:900;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.nav-links a:hover,.mini-link:hover,.footer-links a:hover{border-color:var(--line-hot);background:rgba(0,255,204,.08)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,420px);gap:26px;align-items:center;padding:38px 0 26px}
+.logo-card,.player-shell,.stats,.grid-card,.notes{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:linear-gradient(145deg,rgba(16,22,34,.9),rgba(5,7,12,.92));
+  box-shadow:var(--shadow);
+}
+.logo-card{padding:24px}
+.hero-logo{width:min(620px,100%);display:block;margin:0 auto 14px;filter:drop-shadow(0 0 18px rgba(0,255,204,.22))}
+.kicker{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:.78rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;background:rgba(255,255,255,.04)}
+h1{margin:12px 0 8px;font-size:clamp(3.1rem,9vw,7.2rem);line-height:.82;letter-spacing:-.07em;text-transform:uppercase}
+.sub{max-width:760px;color:#d9fff8;font-size:clamp(1rem,2.2vw,1.25rem);line-height:1.45;margin:0}
+.player-shell{padding:14px}
+.player-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;color:#eafffb;font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+.player-frame{width:100%;height:92px;border:0;border-radius:14px;background:#050507}
+.admin{margin-top:10px;border:1px dashed rgba(255,230,109,.28);border-radius:16px;background:rgba(0,0,0,.22);padding:10px}
+.admin summary{cursor:pointer;color:var(--yellow);font-weight:950;text-transform:uppercase;letter-spacing:.07em;font-size:.78rem}
+.admin-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+.admin input{width:100%;border:1px solid rgba(0,255,204,.32);border-radius:12px;background:#06080f;color:#fff;padding:11px;min-width:0}
+.admin button,.play-btn{border:0;border-radius:14px;background:linear-gradient(180deg,#ffe66d,#ffb300 62%,#ff8b00);color:#1b1100;font-weight:1000;text-transform:uppercase;letter-spacing:.05em;cursor:pointer}
+.admin button{padding:11px 14px}
+.hint{color:var(--muted);font-size:.78rem;line-height:1.35;margin:8px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;overflow:hidden;margin:8px 0 22px;background:var(--line)}
+.stat{background:rgba(10,15,24,.95);padding:14px;text-align:center}
+.stat b{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.stat span{font-size:1.35rem;font-weight:950;color:#fff}
+.game-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 26px;content-visibility:auto;contain-intrinsic-size:780px}
+.grid-card{min-height:190px;padding:16px;display:flex;flex-direction:column;gap:10px;contain:layout paint}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.tag{color:var(--yellow);font-size:.72rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+.ready{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.ready:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(124,255,107,.8)}
+.grid-card h2{margin:0;font-size:clamp(1.2rem,2.2vw,1.65rem);line-height:1;text-transform:uppercase;letter-spacing:-.03em}
+.grid-card p{margin:0;color:var(--muted);line-height:1.38;min-height:42px}
+.play-btn{margin-top:auto;width:100%;min-height:46px;padding:12px 14px;box-shadow:0 5px 0 rgba(0,0,0,.55)}
+.play-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.65)}
+.notes{padding:16px 18px;color:#d8e0f2;line-height:1.5;margin-bottom:20px}
+footer{text-align:center;color:var(--muted);padding:26px 0 40px}
+.footer-links{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+@media(max-width:980px){
+  .hero{grid-template-columns:1fr;padding-top:26px}
+  .game-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:760px){
+  .wrap{width:min(100% - 24px,1120px)}
+  .site-nav{position:relative}
+  .nav-inner{align-items:stretch}
+  .nav-links{width:100%;display:grid;grid-template-columns:repeat(2,1fr)}
+  .nav-links a{width:100%}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .game-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .grid-card{min-height:178px;padding:14px}
+  .admin-row{grid-template-columns:1fr}
+  .admin button{min-height:42px}
+}
+@media(max-width:520px){
+  .wrap{width:min(100% - 18px,1120px)}
+  .hero{gap:14px;padding:16px 0 18px}
+  .logo-card,.player-shell,.stats,.grid-card,.notes{border-radius:18px}
+  .logo-card{padding:16px}
+  h1{font-size:clamp(3rem,17vw,4.6rem)}
+  .sub{font-size:.98rem}
+  .player-frame{height:108px}
+  .game-grid{grid-template-columns:1fr}
+  .grid-card{min-height:auto}
+  .nav-links{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="RETROCADE navigation">
+  <div class="wrap nav-inner">
+    <a class="brand" href="./"><span class="rainbow">MATTBEAR</span> / RETROCADE</a>
+    <div class="nav-links">
+      <a href="https://bearicide.github.io/">Main</a>
+      <a href="https://bearicide.github.io/examples/">Examples</a>
+      <a href="https://bearicide.github.io/MATTBEARCADE/">MATTBEARCADE</a>
+      <a href="https://bearicide.github.io/music-toys/">Music Toys</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="logo-card">
+      <span class="kicker">Arcade launcher · mobile cleaned · lower lag</span>
+      <img class="hero-logo" src="assets/branding/retrocade-logo.svg" alt="RETROCADE">
+      <h1>Play<br><span class="rainbow">clean.</span></h1>
+      <p class="sub">A tighter MATTBEAR arcade hub: cleaner margins, bigger targets, calmer visuals, and less browser punishment.</p>
+    </div>
+
+    <section class="player-shell" aria-label="MATTBEAR mini player">
+      <div class="player-head"><strong>Mini-player</strong><a class="mini-link" href="https://soundcloud.com/mattbear86" target="_blank" rel="noopener">SoundCloud</a></div>
+      <iframe id="scPlayer" class="player-frame" title="MATTBEAR SoundCloud mini-player" allow="autoplay" src=""></iframe>
+      <details class="admin">
+        <summary>Hidden-ready admin / mini-player source</summary>
+        <div class="admin-row">
+          <input id="trackUrl" placeholder="Paste SoundCloud track, playlist, or profile URL">
+          <button id="saveTrackBtn" type="button">Save</button>
+        </div>
+        <p class="hint">Static-safe local setting now. Backend wiring can connect later.</p>
+      </details>
+    </section>
+  </section>
+
+  <section class="stats" aria-label="RETROCADE save stats">
+    <div class="stat"><b>Coins</b><span id="coins">500</span></div>
+    <div class="stat"><b>Tickets</b><span id="tickets">0</span></div>
+    <div class="stat"><b>Level</b><span id="level">1</span></div>
+    <div class="stat"><b>Status</b><span>Ready</span></div>
+  </section>
+
+  <section class="game-grid" id="grid" aria-label="RETROCADE game cabinets"></section>
+
+  <section class="notes">
+    <strong>Build notes:</strong> RETROCADE now prioritizes cleaner alignment, less visual lag, better mobile spacing, larger hit targets, and simpler cabinet cards.
+  </section>
+</main>
+
+<footer class="wrap">
+  <strong>RETROCADE arcade network</strong>
+  <div class="footer-links">
+    <a href="https://bearicide.github.io/">Main Portal</a>
+    <a href="https://bearicide.github.io/MATTBEARCADE/">MATTBEARCADE</a>
+    <a href="https://bearicide.github.io/examples/">Examples</a>
+    <a href="https://github.com/bearicide/retrocade-">Source</a>
+  </div>
+</footer>
+
+<script>
+const DEFAULT_SC = 'https://soundcloud.com/mattbear86';
+const games = [
+  ['snake','Snake','Classic grid goblin.','Cabinet'],
+  ['breakout','Breakout','Brick-smashing reflex test.','Cabinet'],
+  ['invaders','Invaders','Tiny space defense chaos.','Cabinet'],
+  ['asteroids','Asteroids','Float, dodge, blast rocks.','Cabinet'],
+  ['pong','Pong','Ancient two-paddle ritual.','Cabinet'],
+  ['claw','Claw Machine','Prize grabber chaos.','Cabinet'],
+  ['bubble','Bubble Shooter','Color popper puzzle setup.','Cabinet'],
+  ['memory','Memory Match','Flip cards, earn tickets.','Cabinet'],
+  ['racer','Mini Racer','Top-down dodge driver.','Cabinet'],
+  ['rhythm','Rhythm Pads','Tap pads, make noise.','Cabinet'],
+  ['blocks','Falling Blocks','Stack panic simulator.','Cabinet'],
+  ['frog','Frog Dash','Cross the cursed road.','Cabinet']
+];
+
+const fallbackState = { coins:500, tickets:0, xp:0 };
+let state = fallbackState;
+try{ state = JSON.parse(localStorage.getItem('retrocadeState')) || fallbackState; }catch(e){}
+
+function scEmbed(url){
+  return 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(url) + '&color=%2300ffcc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+}
+function loadPlayer(){
+  const input = document.getElementById('trackUrl');
+  const frame = document.getElementById('scPlayer');
+  const saved = localStorage.getItem('retrocadeMiniPlayerUrl') || DEFAULT_SC;
+  input.value = saved;
+  frame.src = scEmbed(saved);
+}
+function saveTrack(){
+  const input = document.getElementById('trackUrl');
+  const frame = document.getElementById('scPlayer');
+  const value = input.value.trim() || DEFAULT_SC;
+  localStorage.setItem('retrocadeMiniPlayerUrl', value);
+  frame.src = scEmbed(value);
+}
+function save(){
+  localStorage.setItem('retrocadeState', JSON.stringify(state));
+  renderStats();
+}
+function renderStats(){
+  document.getElementById('coins').textContent = state.coins;
+  document.getElementById('tickets').textContent = state.tickets;
+  document.getElementById('level').textContent = Math.max(1, Math.floor((state.xp || 0) / 100) + 1);
+}
+function launch(id){
+  state.coins = Math.max(0, state.coins - 1);
+  state.xp = (state.xp || 0) + 5;
+  save();
+  location.href = 'games/' + id + '.html';
+}
+function renderGames(){
+  document.getElementById('grid').innerHTML = games.map(([id,title,desc,tag]) => `
+    <article class="grid-card">
+      <div class="card-top"><div class="tag">${tag}</div><div class="ready">Ready</div></div>
+      <h2>${title}</h2>
+      <p>${desc}</p>
+      <button class="play-btn" type="button" data-game="${id}">Play ${title}</button>
+    </article>
+  `).join('');
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-game]');
+  if(button) launch(button.dataset.game);
+});
+document.getElementById('saveTrackBtn').addEventListener('click', saveTrack);
+
+renderGames();
+renderStats();
+loadPlayer();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('service-worker.js').catch(() => {}); }
+</script>
+</body>
+</html>
