@@ -55,20 +55,7 @@ const RetroCatalog={
 
 const RetroCabinet={
   brand:'bearicide.github.io',
-  moods:{
-    SNAKE:['CLASSIC GRID','COLLECT POINTS','STAY CLEAR'],
-    BREAKOUT:['BRICK FIELD','KEEP THE BALL LIVE','CLEAR THE WALL'],
-    INVADERS:['DEFENSE MODE','MOVE AND FIRE','HOLD THE LINE'],
-    ASTEROIDS:['DRIFT CONTROL','CLEAR THE FIELD','STAY MOVING'],
-    PONG:['PADDLE READY','RETURN THE BALL','SCORE CLEAN'],
-    'CLAW MACHINE':['PRIZE MODE','LINE UP THE DROP','GRAB CLEAN'],
-    'BUBBLE SHOOTER':['MATCH COLORS','AIM CLEAN','CLEAR THE BOARD'],
-    'MEMORY MATCH':['RECALL MODE','MATCH PAIRS','BUILD A STREAK'],
-    'MINI RACER':['RACE MODE','DODGE CLEAN','KEEP MOVING'],
-    'RHYTHM PADS':['PAD MODE','TAP PATTERNS','BUILD A GROOVE'],
-    'FALLING BLOCKS':['STACK MODE','CLEAR LINES','PLAN AHEAD'],
-    'FROG DASH':['CROSSING MODE','TIME THE MOVE','REACH THE GOAL']
-  },
+  moods:{},
   mountBranding(title){
     if(document.querySelector('.retro-brand-stripe'))return;
     const stripe=document.createElement('div');
@@ -78,20 +65,6 @@ const RetroCabinet={
   },
   boot(title){
     this.mountBranding(title);
-    if(sessionStorage.getItem('booted-'+title))return;
-    sessionStorage.setItem('booted-'+title,'1');
-    const lines=this.moods[title]||['RETROCADE CABINET','READY','PRESS START'];
-    const boot=document.createElement('aside');
-    boot.className='retro-boot';
-    boot.innerHTML='<div class="retro-boot-card"><div class="retro-boot-brand">RETROCADE</div><h1>'+title+'</h1><p id="retro-boot-line">'+lines[0]+'</p><button type="button" class="retro-boot-button">Enter Game</button></div>';
-    document.body.appendChild(boot);
-    const button=boot.querySelector('button');
-    let i=0;
-    const line=boot.querySelector('#retro-boot-line');
-    const timer=setInterval(function(){i++;if(line)line.textContent=lines[i%lines.length]},760);
-    function close(){clearInterval(timer);boot.classList.add('closing');if(window.RetroAudio)RetroAudio.confirm();if(window.RetroPass3&&RetroPass3.flash)RetroPass3.flash('rgba(246,207,101,.16)',360);setTimeout(function(){boot.remove()},360)}
-    button.addEventListener('pointerdown',close);
-    setTimeout(function(){if(document.body.contains(boot))close()},2200);
   },
   signal(text,type=''){
     const sig=document.createElement('div');
@@ -155,7 +128,7 @@ const RetroInput={
     this.mountGameInfo(title,info);
     this.mountHelp(title,info);
     RetroState.mount();
-    RetroCabinet.boot(title);
+    RetroCabinet.mountBranding(title);
   },
   mountGameInfo(title,info){
     if(document.querySelector('.game-intro'))return;
