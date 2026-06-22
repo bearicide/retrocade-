@@ -1,8 +1,8 @@
-const CACHE_NAME='retrocade-v11-no-game-splashes';
+const CACHE_NAME='retrocade-v12-shared-working-games';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
 './css/arcade.css','./css/retrocade-theme.css',
-'./js/arcade.js','./js/audio-manager.js','./js/pass3-system.js',
+'./js/arcade.js','./js/working-games.js','./js/audio-manager.js','./js/pass3-system.js',
 './assets/bg/neon-grid.svg','./assets/branding/retrocade-logo.svg','./assets/icons/icon.svg','./assets/ui/mb-ui-control-kit.svg',
 './games/snake.html','./games/breakout.html','./games/invaders.html','./games/asteroids.html','./games/pong.html','./games/claw.html','./games/bubble.html','./games/memory.html','./games/racer.html','./games/rhythm.html','./games/blocks.html','./games/frog.html'
 ];
