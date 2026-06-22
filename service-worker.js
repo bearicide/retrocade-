@@ -1,4 +1,4 @@
-const CACHE_NAME='retrocade-v14-portable-pixel-pack';
+const CACHE_NAME='retrocade-v15-frog-hop-pixel-fix';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
 './css/arcade.css','./css/retrocade-theme.css','./css/portable-pixel-pack.css',
