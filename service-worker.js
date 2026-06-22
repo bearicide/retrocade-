@@ -1,4 +1,4 @@
-const CACHE_NAME='retrocade-v12-shared-working-games';
+const CACHE_NAME='retrocade-v13-no-cabinet-overlays';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
 './css/arcade.css','./css/retrocade-theme.css',
