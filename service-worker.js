@@ -1,9 +1,9 @@
-const CACHE_NAME='retrocade-v13-no-cabinet-overlays';
+const CACHE_NAME='retrocade-v14-portable-pixel-pack';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
-'./css/arcade.css','./css/retrocade-theme.css',
+'./css/arcade.css','./css/retrocade-theme.css','./css/portable-pixel-pack.css',
 './js/arcade.js','./js/working-games.js','./js/audio-manager.js','./js/pass3-system.js',
-'./assets/bg/neon-grid.svg','./assets/branding/retrocade-logo.svg','./assets/icons/icon.svg','./assets/ui/mb-ui-control-kit.svg',
+'./assets/bg/neon-grid.svg','./assets/branding/retrocade-logo.svg','./assets/icons/icon.svg','./assets/ui/mb-ui-control-kit.svg','./assets/portable-pixel/retrocade-portable-pixel-sprite-pack.svg','./assets/portable-pixel/README.md',
 './games/snake.html','./games/breakout.html','./games/invaders.html','./games/asteroids.html','./games/pong.html','./games/claw.html','./games/bubble.html','./games/memory.html','./games/racer.html','./games/rhythm.html','./games/blocks.html','./games/frog.html'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>Promise.allSettled(CORE_ASSETS.map(asset=>cache.add(asset)))));self.skipWaiting()});
