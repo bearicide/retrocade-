@@ -1,4 +1,4 @@
-const CACHE_NAME='retrocade-v9-public-launcher-polish';
+const CACHE_NAME='retrocade-v10-clean-cabinets';
 const CORE_ASSETS=[
 './','./index.html','./admin.html','./manifest.json',
 './css/arcade.css','./css/retrocade-theme.css',
