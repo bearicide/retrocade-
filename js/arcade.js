@@ -11,57 +11,84 @@ const RetroStore={
     state.plays=(state.plays||0)+1;
     state.cabinets=state.cabinets||{};
     state.cabinets[cabinet]=(state.cabinets[cabinet]||0)+1;
-    this.save(state);return state;
+    this.save(state);
+    return state;
   }
 };
 
-(function mountGlobalTheme(){if(document.getElementById('retrocade-theme-layer'))return;const link=document.createElement('link');link.id='retrocade-theme-layer';link.rel='stylesheet';link.href='../css/retrocade-theme.css';document.head.appendChild(link)})();
-function retroLoadScript(id,src,onload){if(document.getElementById(id)){if(onload)onload();return;}const script=document.createElement('script');script.id=id;script.src=src;script.defer=true;if(onload)script.onload=onload;script.onerror=function(){console.warn('[RETROCADE] optional script unavailable:',src)};document.head.appendChild(script)}
-function retroLoadAudio(){if(window.RetroAudio||window.__retroAudioLoading)return;window.__retroAudioLoading=true;retroLoadScript('retro-audio-manager','../js/audio-manager.js')}
-function retroLoadPass3(){if(window.RetroPass3||window.__retroPass3Loading)return;window.__retroPass3Loading=true;retroLoadScript('retro-pass3-system','../js/pass3-system.js',function(){if(window.RetroPass3&&RetroPass3.attract)RetroPass3.attract()})}
+function retroLoadScript(id,src,onload){
+  if(document.getElementById(id)){if(onload)onload();return;}
+  const script=document.createElement('script');
+  script.id=id;script.src=src;script.defer=true;
+  if(onload)script.onload=onload;
+  script.onerror=()=>console.warn('[RETROCADE] optional script unavailable:',src);
+  document.head.appendChild(script);
+}
+function retroLoadAudio(){
+  if(window.RetroAudio||window.__retroAudioLoading)return;
+  window.__retroAudioLoading=true;
+  retroLoadScript('retro-audio-manager','../js/audio-manager.js');
+}
 
 const RetroCatalog={
-  SNAKE:{type:'Classic',summary:'Guide the snake, collect points, and avoid the walls.',controls:'Arrows/WASD or the direction deck. Action gives the snake a quick shove.'},
-  BREAKOUT:{type:'Classic',summary:'Move the paddle, keep the ball alive, and clear every brick.',controls:'Left/right, pointer, or touch. Action punches the ball upward.'},
-  INVADERS:{type:'Shooter',summary:'Move across the bottom lane and defend the screen from incoming waves.',controls:'Left/right to move. Action, Space, or the center button fires.'},
-  ASTEROIDS:{type:'Shooter',summary:'Steer, thrust, and clear drifting hazards while staying in control.',controls:'Left/right rotate, up thrusts, action fires.'},
-  PONG:{type:'Classic',summary:'A clean two-paddle reflex game with simple scoring and fast rounds.',controls:'Up/down, pointer, or touch moves the paddle.'},
-  'CLAW MACHINE':{type:'Prize',summary:'Line up the claw, drop at the right time, and collect prizes.',controls:'Left/right aims the claw. Action drops it.'},
-  'BUBBLE SHOOTER':{type:'Puzzle',summary:'Pop connected color groups and clear the board.',controls:'Tap a group. Action auto-picks the best available group.'},
-  'MEMORY MATCH':{type:'Puzzle',summary:'Flip cards, remember positions, and match pairs for tickets.',controls:'Tap cards. Action flips the next hidden card.'},
-  'MINI RACER':{type:'Racing',summary:'Steer through the lane, dodge obstacles, and keep the run alive.',controls:'Left/right changes lanes. Action dodges toward a safer lane.'},
-  'RHYTHM PADS':{type:'Music',summary:'Tap pads, trigger sounds, and build a quick rhythm pattern.',controls:'Tap screen quadrants, use action, or press 1-4.'},
-  'FALLING BLOCKS':{type:'Arcade',summary:'Dodge falling blocks and survive the pressure.',controls:'Left/right or pointer moves. Action quick-dashes.'},
-  'FROG DASH':{type:'Arcade',summary:'Cross the lanes, time each move, and reach the goal safely.',controls:'Direction controls move one step. Action hops upward.'}
+  SNAKE:'Arrows/WASD or touch. Action gives a quick shove.',
+  BREAKOUT:'Left/right, pointer, or touch. Action launches the ball.',
+  INVADERS:'Left/right to move. Action or Space fires.',
+  ASTEROIDS:'Left/right rotates, up thrusts, action fires.',
+  PONG:'Up/down, pointer, or touch moves the paddle.',
+  'CLAW MACHINE':'Left/right aims. Action drops the claw.',
+  'BUBBLE SHOOTER':'Tap a group. Action selects a playable group.',
+  'MEMORY MATCH':'Tap cards. Action flips the next hidden card.',
+  'MINI RACER':'Left/right changes lanes. Action dodges.',
+  'RHYTHM PADS':'Tap quadrants or press 1–4.',
+  'FALLING BLOCKS':'Left/right or pointer moves. Action dashes.',
+  'FROG DASH':'Direction controls move one step. Action hops upward.'
 };
 
-const RetroCabinet={
-  mountBranding(title){if(document.querySelector('.retro-brand-stripe'))return;const stripe=document.createElement('div');stripe.className='retro-brand-stripe';stripe.textContent='RETROCADE • '+title+' • MATTBEAR';document.body.appendChild(stripe)},
-  signal(text,type=''){const sig=document.createElement('div');sig.className='retro-signal '+type;sig.textContent=text||'RETROCADE';document.body.appendChild(sig);setTimeout(()=>sig.remove(),1200)}
-};
 const RetroState={
   mount(){if(document.getElementById('retro-state'))return;const overlay=document.createElement('aside');overlay.id='retro-state';overlay.className='retro-state';overlay.setAttribute('aria-hidden','true');overlay.innerHTML='<div class="retro-state-card"><h1 id="retro-state-title">READY</h1><p id="retro-state-sub">PRESS START</p></div>';document.body.appendChild(overlay)},
-  show(title='READY',sub='',type='',ms=1100){this.mount();const overlay=document.getElementById('retro-state'),heading=document.getElementById('retro-state-title'),text=document.getElementById('retro-state-sub');if(!overlay||!heading||!text)return;overlay.className='retro-state show '+type;overlay.setAttribute('aria-hidden','false');heading.textContent=title;text.textContent=sub;clearTimeout(window.__retroStateTimer);if(ms!==0)window.__retroStateTimer=setTimeout(()=>RetroState.close(),ms);if(window.RetroAudio){if(type==='bigwin')RetroAudio.bigWin();else if(type==='danger')RetroAudio.gameOver();else RetroAudio.confirm()}},
+  show(title='READY',sub='',type='',ms=900){this.mount();const overlay=document.getElementById('retro-state');const heading=document.getElementById('retro-state-title');const text=document.getElementById('retro-state-sub');if(!overlay||!heading||!text)return;overlay.className='retro-state show '+type;overlay.setAttribute('aria-hidden','false');heading.textContent=title;text.textContent=sub;clearTimeout(window.__retroStateTimer);if(ms!==0)window.__retroStateTimer=setTimeout(()=>this.close(),ms)},
   close(){const overlay=document.getElementById('retro-state');if(!overlay)return;overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true')}
 };
-function retroHud(){const state=RetroStore.load();const hud=document.getElementById('hud');if(hud)hud.textContent='Coins '+(state.coins||0)+' | Tickets '+(state.tickets||0)+' | Level '+(Math.floor((state.xp||0)/100)+1)}
-function retroToast(text){let toast=document.getElementById('retro-toast');if(!toast){toast=document.createElement('div');toast.id='retro-toast';document.body.appendChild(toast)}toast.textContent=text;toast.classList.add('show');clearTimeout(window.__retroToastTimer);window.__retroToastTimer=setTimeout(()=>toast.classList.remove('show'),1200)}
-function retroWin(tickets=10,xp=20,coins=0,cabinet='cabinet'){const state=RetroStore.award(tickets,xp,coins,cabinet);retroHud();retroToast('+'+tickets+' tickets  +'+xp+' XP'+(coins?'  +'+coins+' coins':''));if(window.RetroAudio){tickets>=20?RetroAudio.bigWin():RetroAudio.score()}if(tickets>=20)RetroState.show('BIG WIN','+'+tickets+' TICKETS','bigwin',900);if(tickets>=20)RetroCabinet.signal('RETROCADE','win');return state}
+
+function retroHud(){const state=RetroStore.load();const hud=document.getElementById('hud');if(hud)hud.textContent='Coins '+(state.coins||0)+' · Tickets '+(state.tickets||0)+' · Level '+(Math.floor((state.xp||0)/100)+1)}
+function retroToast(text){let toast=document.getElementById('retro-toast');if(!toast){toast=document.createElement('div');toast.id='retro-toast';document.body.appendChild(toast)}toast.textContent=text;toast.classList.add('show');clearTimeout(window.__retroToastTimer);window.__retroToastTimer=setTimeout(()=>toast.classList.remove('show'),1100)}
+function retroWin(tickets=10,xp=20,coins=0,cabinet='cabinet'){const state=RetroStore.award(tickets,xp,coins,cabinet);retroHud();retroToast('+'+tickets+' tickets · +'+xp+' XP'+(coins?' · +'+coins+' coins':''));if(window.RetroAudio){tickets>=20?RetroAudio.bigWin():RetroAudio.score()}return state}
 
 const RetroInput={
   keys:{},preventKeys:['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ','Spacebar'],
-  init(){if(window.__retroInputReady)return;window.__retroInputReady=true;document.addEventListener('keydown',event=>{RetroInput.keys[event.key]=true;if(RetroInput.preventKeys.includes(event.key))event.preventDefault();const k=event.key.toLowerCase();if(event.key==='?'||k==='h')RetroInput.toggleHelp();if(k==='m')RetroInput.toggleAudio();if(event.key==='Escape'){RetroInput.closeHelp();RetroState.close()}if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d'].includes(k)&&window.RetroAudio)RetroAudio.move();if(k===' '||k==='enter')window.RetroAudio&&RetroAudio.fire()},{passive:false});document.addEventListener('keyup',event=>{RetroInput.keys[event.key]=false});window.addEventListener('blur',()=>{RetroInput.keys={};document.querySelectorAll('.is-pressed').forEach(button=>button.classList.remove('is-pressed'))});document.addEventListener('pointerdown',event=>{const button=event.target.closest('button,.arcade-btn,.touch-btn,.play-btn');if(!button)return;button.classList.add('is-pressed');if(button.matches('[data-move]')&&window.RetroAudio)RetroAudio.move();if((button.id||'').match(/fire|action|drop|boost|hop|dash/i)&&window.RetroAudio)RetroAudio.fire()},true);['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,event=>{const button=event.target.closest('button,.arcade-btn,.touch-btn,.play-btn');if(button)button.classList.remove('is-pressed')},true))},
-  enhanceControls(title){this.init();document.body.classList.add('retrocade-controls-ready');document.body.setAttribute('data-cabinet',title.toLowerCase().replace(/\s+/g,'-'));document.querySelectorAll('button,.arcade-btn,.touch-btn').forEach(button=>{if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent.trim()||'Arcade control');button.setAttribute('draggable','false')});document.querySelectorAll('[data-dir],[data-move]').forEach(button=>{const dir=button.dataset.dir||button.dataset.move||button.textContent.trim();button.classList.add('direction-control');button.setAttribute('aria-label','Move '+dir)});const touch=document.querySelector('.touch-controls');if(touch){touch.setAttribute('aria-label',title+' arcade controls');touch.setAttribute('role','group');if(!touch.querySelector('.control-hint')){const hint=document.createElement('div');hint.className='control-hint';hint.textContent='Keyboard: WASD / Arrows • Touch: on-screen controls • H: help • M: mute';touch.appendChild(hint)}}const note=document.querySelector('.note');const info=RetroCatalog[title]||{type:'Arcade',summary:'Play the cabinet, score points, and return to RETROCADE when finished.',controls:'Use keyboard or touch controls.'};if(note)note.innerHTML='<span class="control-chip">Controls</span>'+info.controls;this.mountGameInfo(title,info);this.mountHelp(title,info);this.mountCabinetDeck(title);RetroState.mount();RetroCabinet.mountBranding(title);setTimeout(()=>window.RetroAudio&&RetroAudio.attract&&RetroAudio.attract(),900)},
-  mountGameInfo(title,info){if(document.querySelector('.game-intro'))return;const wrap=document.querySelector('.game-wrap');if(!wrap)return;const intro=document.createElement('section');intro.className='game-intro';intro.innerHTML='<div><span class="cabinet-type">'+info.type+'</span><h1>'+title+'</h1><p>'+info.summary+'</p></div><nav class="game-links" aria-label="Game links"><a href="../index.html">RETROCADE</a><a href="https://bearicide.github.io/MATTBEARCADE/">Arcade</a><a href="https://bearicide.github.io/projects.html#games">Projects</a></nav>';wrap.parentNode.insertBefore(intro,wrap)},
-  mountCabinetDeck(title){if(document.querySelector('.cabinet-deck'))return;const wrap=document.querySelector('.game-wrap');if(!wrap)return;const deck=document.createElement('section');deck.className='cabinet-deck';deck.innerHTML='<div class="cabinet-meter"><span>POWER</span><b></b></div><button class="knob" type="button" aria-label="Volume knob"><span>VOL</span></button><button class="knob" type="button" aria-label="Tone knob"><span>TONE</span></button><button class="knob" type="button" aria-label="Glow knob"><span>GLOW</span></button><button class="arcade-btn audio-toggle" type="button">Audio On</button>';wrap.appendChild(deck);let knobTurn=0;deck.querySelectorAll('.knob').forEach(knob=>knob.addEventListener('click',()=>{knobTurn=(knobTurn+38)%360;knob.style.setProperty('--turn',knobTurn+'deg');document.body.style.setProperty('--cabinet-glow',String(.18+(knobTurn%140)/500));window.RetroAudio&&RetroAudio.knob&&RetroAudio.knob()}));deck.querySelector('.audio-toggle').addEventListener('click',()=>this.toggleAudio())},
-  mountHelp(title,info){if(document.getElementById('retro-help'))return;const help=document.createElement('aside');help.id='retro-help';help.setAttribute('aria-hidden','true');help.innerHTML='<div class="retro-help-card"><button class="retro-help-close" type="button" onclick="RetroInput.closeHelp()">×</button><strong>'+title+' Controls</strong><p>'+info.summary+'</p><p><b>Controls:</b> '+info.controls+'</p><p><b>Shortcuts:</b> H/? help, Escape closes, M toggles sound.</p><p><b>Back:</b> Use the RETROCADE link at the top.</p></div>';document.body.appendChild(help)},
-  toggleHelp(){const help=document.getElementById('retro-help');if(!help)return;const isOpen=help.classList.toggle('open');help.setAttribute('aria-hidden',isOpen?'false':'true')},
-  closeHelp(){const help=document.getElementById('retro-help');if(!help)return;help.classList.remove('open');help.setAttribute('aria-hidden','true')},
-  toggleAudio(){if(!window.RetroAudio)return retroToast('Audio still loading');RetroAudio.unlock();const muted=RetroAudio.toggleMute();document.querySelectorAll('.audio-toggle').forEach(btn=>btn.textContent=muted?'Audio Off':'Audio On');retroToast(muted?'Audio muted':'Audio armed')}
+  init(){
+    if(window.__retroInputReady)return;
+    window.__retroInputReady=true;
+    document.addEventListener('keydown',event=>{RetroInput.keys[event.key]=true;if(RetroInput.preventKeys.includes(event.key))event.preventDefault();const key=event.key.toLowerCase();if(key==='m')RetroInput.toggleAudio();if(event.key==='Escape')RetroState.close()},{passive:false});
+    document.addEventListener('keyup',event=>{RetroInput.keys[event.key]=false});
+    window.addEventListener('blur',()=>{RetroInput.keys={};document.querySelectorAll('.is-pressed').forEach(button=>button.classList.remove('is-pressed'))});
+    document.addEventListener('pointerdown',event=>{const button=event.target.closest('button,.arcade-btn,.touch-btn');if(button)button.classList.add('is-pressed')},true);
+    ['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,event=>{const button=event.target.closest('button,.arcade-btn,.touch-btn');if(button)button.classList.remove('is-pressed')},true));
+  },
+  enhanceControls(title){
+    this.init();
+    document.body.setAttribute('data-cabinet',title.toLowerCase().replace(/\s+/g,'-'));
+    document.querySelectorAll('button,.arcade-btn,.touch-btn').forEach(button=>{if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent.trim()||'Arcade control');button.setAttribute('draggable','false')});
+    document.querySelectorAll('[data-dir],[data-move]').forEach(button=>button.classList.add('direction-control'));
+    const note=document.querySelector('.note');
+    if(note)note.textContent=RetroCatalog[title]||'Use keyboard or touch controls.';
+    RetroState.mount();
+  },
+  toggleAudio(){if(!window.RetroAudio)return retroToast('Audio still loading');RetroAudio.unlock();const muted=RetroAudio.toggleMute();retroToast(muted?'Audio muted':'Audio on')}
 };
-function retroHeader(title){retroLoadAudio();retroLoadPass3();const bar=document.createElement('div');bar.className='top';bar.innerHTML='<a href="../index.html">RETROCADE</a><b>'+title+'</b><span id="hud"></span><button class="help-toggle" type="button" onclick="RetroInput.toggleHelp()" aria-label="Show controls">?</button>';document.body.prepend(bar);retroHud();setTimeout(()=>RetroInput.enhanceControls(title),0)}
+
+function retroHeader(title){
+  retroLoadAudio();
+  const bar=document.createElement('header');
+  bar.className='top';
+  bar.innerHTML='<a href="../index.html">← RETROCADE</a><b>'+title+'</b><span id="hud"></span>';
+  document.body.prepend(bar);
+  retroHud();
+  setTimeout(()=>RetroInput.enhanceControls(title),0);
+}
 function retroCanvasPoint(canvas,event){const rect=canvas.getBoundingClientRect();const source=event.touches&&event.touches[0]?event.touches[0]:event;return{x:((source.clientX-rect.left)/rect.width)*canvas.width,y:((source.clientY-rect.top)/rect.height)*canvas.height}}
 function retroBindHold(button,down,up){if(!button)return;const release=up||function(){};button.addEventListener('pointerdown',event=>{event.preventDefault();button.classList.add('is-pressed');down(event)});['pointerup','pointerleave','pointercancel'].forEach(type=>button.addEventListener(type,event=>{button.classList.remove('is-pressed');release(event)}))}
-function retroSafeBoot(label,fn){try{fn()}catch(error){console.error('[RETROCADE]',label,error);retroToast('Cabinet needs a quick patch')}}
-window.addEventListener('error',event=>{console.error('[RETROCADE ERROR]',event.message,event.error);retroToast('Cabinet error logged')});
-window.addEventListener('unhandledrejection',event=>{console.error('[RETROCADE PROMISE]',event.reason);retroToast('Cabinet error logged')});
+function retroSafeBoot(label,fn){try{fn()}catch(error){console.error('[RETROCADE]',label,error);retroToast('Cabinet error logged')}}
+window.addEventListener('error',event=>{console.error('[RETROCADE ERROR]',event.message,event.error)});
+window.addEventListener('unhandledrejection',event=>{console.error('[RETROCADE PROMISE]',event.reason)});
