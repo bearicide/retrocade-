@@ -1,1 +1,68 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Memory Match | RETROCADE</title><link rel="stylesheet" href="../css/arcade.css"><link rel="stylesheet" href="../css/clean-game-overrides.css"><script src="../js/arcade.js"></script></head><body data-game="memory"><div class="game-wrap"><canvas id="game" class="screen" width="800" height="600"></canvas><div class="controls"><button id="startBtn">START</button><button id="pauseBtn">PAUSE</button><button id="resetBtn">RESET</button><button id="actionBtn">FLIP</button></div><p class="note">Tap or click cards to match pairs.</p></div><div class="touch-controls"><div class="touch-pad-label">MEMORY CONTROL DECK</div><div class="dpad"><button class="touch-btn up" data-move="up">▲</button><button class="touch-btn left" data-move="left">◀</button><button class="touch-btn center primary" id="fireBtn">FLIP</button><button class="touch-btn right" data-move="right">▶</button><button class="touch-btn down" data-move="down">▼</button></div><div class="actions"><button class="touch-btn wide primary" id="touchStart">START</button><button class="touch-btn wide" id="touchPause">PAUSE</button><button class="touch-btn wide" id="touchReset">RESET</button></div></div><script>window.RETROCADE_GAME='memory';retroHeader('MEMORY MATCH');</script><script src="../js/working-games.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Memory Match | RETROCADE</title>
+  <link rel="stylesheet" href="../css/arcade.css">
+  <link rel="stylesheet" href="../css/clean-game-overrides.css">
+  <style>
+    body[data-game="memory"] .game-wrap{
+      width:min(1100px,100%);
+      min-height:calc(100dvh - 64px);
+      padding:12px 10px 32px!important;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    body[data-game="memory"] .screen{
+      width:min(100%,1000px)!important;
+      max-height:calc(100dvh - 190px)!important;
+      border:0!important;
+      border-radius:12px!important;
+      box-shadow:0 16px 50px rgba(0,0,0,.45)!important;
+      cursor:pointer;
+    }
+    body[data-game="memory"] .controls{
+      display:flex;
+      gap:8px;
+      margin:12px auto 0!important;
+    }
+    body[data-game="memory"] .controls button{
+      min-height:42px;
+      padding:9px 15px;
+      border-radius:10px;
+      box-shadow:none;
+    }
+    body[data-game="memory"] .note{
+      margin:9px auto 0;
+      padding:0;
+      border:0;
+      background:transparent;
+      box-shadow:none;
+      font-size:13px;
+    }
+    @media(max-width:700px){
+      body[data-game="memory"] .game-wrap{padding:8px 6px 20px!important}
+      body[data-game="memory"] .screen{max-height:calc(100dvh - 210px)!important}
+      body[data-game="memory"] .controls{display:grid;grid-template-columns:repeat(3,1fr);width:100%}
+      body[data-game="memory"] .controls button{width:100%;padding:8px 6px}
+    }
+  </style>
+  <script src="../js/arcade.js"></script>
+</head>
+<body data-game="memory">
+  <main class="game-wrap">
+    <canvas id="game" class="screen" width="800" height="600"></canvas>
+    <div class="controls" aria-label="Memory Match controls">
+      <button id="startBtn">START</button>
+      <button id="pauseBtn">PAUSE</button>
+      <button id="resetBtn">RESET</button>
+      <button id="actionBtn" hidden>FLIP</button>
+    </div>
+    <p class="note">Tap or click the cards to match every pair.</p>
+  </main>
+  <script>window.RETROCADE_GAME='memory';retroHeader('MEMORY MATCH');</script>
+  <script src="../js/working-games.js"></script>
+</body>
+</html>
