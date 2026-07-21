@@ -31,18 +31,18 @@ function retroLoadAudio(){
 }
 
 const RetroCatalog={
-  SNAKE:'Arrows/WASD or touch. Action gives a quick shove.',
-  BREAKOUT:'Left/right, pointer, or touch. Action launches the ball.',
-  INVADERS:'Left/right to move. Action or Space fires.',
-  ASTEROIDS:'Left/right rotates, up thrusts, action fires.',
-  PONG:'Up/down, pointer, or touch moves the paddle.',
-  'CLAW MACHINE':'Left/right aims. Action drops the claw.',
-  'BUBBLE SHOOTER':'Tap a group. Action selects a playable group.',
-  'MEMORY MATCH':'Tap cards. Action flips the next hidden card.',
-  'MINI RACER':'Left/right changes lanes. Action dodges.',
-  'RHYTHM PADS':'Tap quadrants or press 1–4.',
-  'FALLING BLOCKS':'Left/right or pointer moves. Action dashes.',
-  'FROG DASH':'Direction controls move one step. Action hops upward.'
+  SNAKE:'Keyboard: arrows/WASD. Mouse or touch: directional controls. Action gives a quick shove.',
+  BREAKOUT:'Keyboard: left/right. Mouse or touch: move on the board or use controls. Action launches the ball.',
+  INVADERS:'Keyboard: left/right and Space. Mouse or touch: directional controls and Fire.',
+  ASTEROIDS:'Keyboard: left/right rotates, up thrusts, Space fires. Mouse or touch: controls below.',
+  PONG:'Keyboard: up/down. Mouse or touch: move directly on the board or use controls.',
+  'CLAW MACHINE':'Keyboard: left/right and Space. Mouse or touch: aim controls and Drop.',
+  'BUBBLE SHOOTER':'Keyboard: arrows and Space. Mouse or touch: select groups directly.',
+  'MEMORY MATCH':'Keyboard: arrows and Enter/Space. Mouse or touch: select cards directly.',
+  'MINI RACER':'Keyboard: left/right and Space. Mouse or touch: lane controls and Dodge.',
+  'RHYTHM PADS':'Keyboard: 1–4 or Space. Mouse or touch: tap the pads.',
+  'FALLING BLOCKS':'Keyboard: left/right and Space. Mouse or touch: move directly or use controls.',
+  'FROG DASH':'Keyboard: arrows/WASD. Mouse or touch: directional controls or swipe.'
 };
 
 const RetroState={
@@ -60,7 +60,7 @@ const RetroInput={
   init(){
     if(window.__retroInputReady)return;
     window.__retroInputReady=true;
-    document.addEventListener('keydown',event=>{RetroInput.keys[event.key]=true;if(RetroInput.preventKeys.includes(event.key))event.preventDefault();const key=event.key.toLowerCase();if(key==='m')RetroInput.toggleAudio();if(event.key==='Escape')RetroState.close()},{passive:false});
+    document.addEventListener('keydown',event=>{RetroInput.keys[event.key]=true;if(RetroInput.preventKeys.includes(event.key)&&!event.target.matches('input,textarea,select'))event.preventDefault();const key=event.key.toLowerCase();if(key==='m')RetroInput.toggleAudio();if(event.key==='Escape')RetroState.close()},{passive:false});
     document.addEventListener('keyup',event=>{RetroInput.keys[event.key]=false});
     window.addEventListener('blur',()=>{RetroInput.keys={};document.querySelectorAll('.is-pressed').forEach(button=>button.classList.remove('is-pressed'))});
     document.addEventListener('pointerdown',event=>{const button=event.target.closest('button,.arcade-btn,.touch-btn');if(button)button.classList.add('is-pressed')},true);
@@ -69,10 +69,11 @@ const RetroInput={
   enhanceControls(title){
     this.init();
     document.body.setAttribute('data-cabinet',title.toLowerCase().replace(/\s+/g,'-'));
-    document.querySelectorAll('button,.arcade-btn,.touch-btn').forEach(button=>{if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent.trim()||'Arcade control');button.setAttribute('draggable','false')});
+    document.querySelectorAll('button,.arcade-btn,.touch-btn').forEach(button=>{if(!button.getAttribute('aria-label'))button.setAttribute('aria-label',button.textContent.trim()||'Arcade control');button.setAttribute('draggable','false');button.style.touchAction='manipulation'});
     document.querySelectorAll('[data-dir],[data-move]').forEach(button=>button.classList.add('direction-control'));
+    document.querySelectorAll('canvas').forEach(canvas=>{canvas.tabIndex=0;canvas.setAttribute('role','application');canvas.style.touchAction='none';canvas.addEventListener('contextmenu',event=>event.preventDefault())});
     const note=document.querySelector('.note');
-    if(note)note.textContent=RetroCatalog[title]||'Use keyboard or touch controls.';
+    if(note)note.textContent=RetroCatalog[title]||'Keyboard, mouse, and touch controls supported.';
     RetroState.mount();
   },
   toggleAudio(){if(!window.RetroAudio)return retroToast('Audio still loading');RetroAudio.unlock();const muted=RetroAudio.toggleMute();retroToast(muted?'Audio muted':'Audio on')}
