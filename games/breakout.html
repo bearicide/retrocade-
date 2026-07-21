@@ -1,1 +1,68 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Breakout | RETROCADE</title><link rel="stylesheet" href="../css/arcade.css"><link rel="stylesheet" href="../css/clean-game-overrides.css"><script src="../js/arcade.js"></script></head><body data-game="breakout"><div class="game-wrap"><canvas id="game" class="screen" width="800" height="600"></canvas><div class="controls"><button id="startBtn">START</button><button id="pauseBtn">PAUSE</button><button id="resetBtn">RESET</button><button id="actionBtn">LAUNCH</button></div><p class="note">Move the paddle with arrows, WASD, touch, or pointer.</p></div><div class="touch-controls"><div class="touch-pad-label">BREAKOUT CONTROL DECK</div><div class="dpad"><button class="touch-btn up" data-move="up">▲</button><button class="touch-btn left" data-move="left">◀</button><button class="touch-btn center primary" id="fireBtn">LAUNCH</button><button class="touch-btn right" data-move="right">▶</button><button class="touch-btn down" data-move="down">▼</button></div><div class="actions"><button class="touch-btn wide primary" id="touchStart">START</button><button class="touch-btn wide" id="touchPause">PAUSE</button><button class="touch-btn wide" id="touchReset">RESET</button></div></div><script>window.RETROCADE_GAME='breakout';retroHeader('BREAKOUT');</script><script src="../js/working-games.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1d">
+<title>Breakout | RETROCADE</title>
+<style>
+:root{--ink:#f7f8ff;--muted:#aeb8d2;--line:rgba(255,255,255,.12);--panel:rgba(18,26,49,.84);--cyan:#35d6ff;--violet:#8067ff;--pink:#ff6fae;--gold:#ffd166;--green:#68e0a0;--shadow:0 28px 90px rgba(0,0,0,.42)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 15% 8%,rgba(128,103,255,.24),transparent 30rem),radial-gradient(circle at 88% 12%,rgba(53,214,255,.16),transparent 28rem),linear-gradient(180deg,#11182d,#090e1a 70%);color:var(--ink)}
+body{padding:16px;overflow-x:hidden}.app{width:min(1120px,100%);margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.back{color:var(--ink);text-decoration:none;font-weight:900}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);background:rgba(255,255,255,.05);font-size:.82rem;font-weight:800}
+.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px}.hero-copy,.stats,.game-shell{border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)}.hero-copy{border-radius:28px;padding:26px}.eyebrow{color:var(--cyan);font-size:.76rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}.hero h1{margin:8px 0 7px;font-size:clamp(2.8rem,9vw,6.2rem);line-height:.9;letter-spacing:-.06em}.hero p{margin:0;color:var(--muted);line-height:1.5}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding:12px;border-radius:28px}.stat{min-height:92px;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045);display:flex;flex-direction:column;justify-content:space-between}.stat span{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:900}.stat strong{font-size:clamp(1.55rem,5vw,2.5rem)}
+.game-shell{border-radius:28px;padding:14px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.status strong{display:block}.status span{display:block;color:var(--muted);font-size:.86rem;margin-top:3px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:13px;padding:10px 14px;background:rgba(255,255,255,.07);color:var(--ink);font-weight:850;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--cyan),#4e7cff);border-color:transparent;color:#06111b}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:14px;align-items:start}.canvas-wrap{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--line);background:#08101d}.canvas-wrap canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;touch-action:none}.side{display:grid;gap:12px}.panel{border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(255,255,255,.045)}.panel strong{display:block;margin-bottom:6px}.panel p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.45}.slider{width:100%;accent-color:var(--cyan)}.touch-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.touch-row button{min-height:58px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.08);color:var(--ink);font-size:1.3rem;font-weight:900}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,18px);opacity:0;pointer-events:none;border:1px solid rgba(255,209,102,.4);border-radius:999px;padding:11px 15px;background:rgba(9,14,26,.95);color:#ffe8a3;font-weight:900;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:820px){body{padding:9px}.hero{grid-template-columns:1fr}.stats{grid-template-columns:repeat(4,1fr)}.stat{min-height:76px;padding:10px}.stage{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.toolbar{align-items:flex-start;flex-direction:column}.pill{display:none}.game-shell{padding:10px;border-radius:22px}.canvas-wrap{border-radius:16px}}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}.side{grid-template-columns:1fr}.hero-copy{padding:21px}.hero h1{font-size:3.5rem}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="topbar"><a class="back" href="../index.html">← RETROCADE</a><span class="pill">MATTBEAR / BREAKOUT</span></header>
+<section class="hero">
+<div class="hero-copy"><span class="eyebrow">Precision Mode • Universal Controls</span><h1>Breakout</h1><p>Clear the wall with keyboard, mouse, or touch. Move the paddle anywhere, then launch with Space, Enter, click, or tap.</p></div>
+<div class="stats"><div class="stat"><span>Score</span><strong id="score">0</strong></div><div class="stat"><span>Lives</span><strong id="lives">3</strong></div><div class="stat"><span>Level</span><strong id="level">1</strong></div><div class="stat"><span>Tickets</span><strong id="tickets">0</strong></div></div>
+</section>
+<section class="game-shell">
+<div class="toolbar"><div class="status"><strong id="status">Ready</strong><span>Arrows/A-D, mouse, drag, or the controls below.</span></div><div class="buttons"><button class="btn" id="pauseBtn">Pause</button><button class="btn primary" id="resetBtn">New Game</button></div></div>
+<div class="stage">
+<div class="canvas-wrap"><canvas id="game" width="800" height="600" aria-label="Breakout game"></canvas></div>
+<aside class="side">
+<div class="panel"><strong>Move</strong><div class="touch-row"><button data-move="left" aria-label="Move paddle left">◀</button><button data-move="right" aria-label="Move paddle right">▶</button></div></div>
+<div class="panel"><strong>Launch</strong><button class="btn primary" id="launchBtn" style="width:100%">Launch Ball</button></div>
+<div class="panel"><strong>Pointer control</strong><p>Move or drag anywhere on the playfield. Click/tap launches the ball.</p></div>
+</aside>
+</div>
+</section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),W=800,H=600;
+const scoreEl=document.getElementById('score'),livesEl=document.getElementById('lives'),levelEl=document.getElementById('level'),ticketsEl=document.getElementById('tickets'),statusEl=document.getElementById('status'),toast=document.getElementById('toast');
+let paddle,ball,bricks=[],score=0,lives=3,level=1,tickets=0,running=false,paused=false,last=0,keys={};
+const colors=['#ff6fae','#ffd166','#68e0a0','#35d6ff','#8067ff'];
+function notifyTickets(n){toast.textContent='+'+n+' tickets';toast.classList.add('show');clearTimeout(window.__boToast);window.__boToast=setTimeout(()=>toast.classList.remove('show'),1000)}
+function award(n){tickets+=n;ticketsEl.textContent=tickets;try{const k='retrocadeState',s=JSON.parse(localStorage.getItem(k)||'{}');s.tickets=(s.tickets||0)+n;s.plays=(s.plays||0)+1;localStorage.setItem(k,JSON.stringify(s))}catch(e){}notifyTickets(n)}
+function buildBricks(){bricks=[];const cols=10,rows=5,gap=8,bw=64,bh=24,startX=(W-(cols*bw+(cols-1)*gap))/2;for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)bricks.push({x:startX+c*(bw+gap),y:72+r*(bh+gap),w:bw,h:bh,alive:true,color:colors[r%colors.length]})}
+function resetBall(){ball={x:paddle.x+paddle.w/2,y:paddle.y-14,r:10,vx:4.2+(level-1)*.35,vy:-5.4-(level-1)*.3,stuck:true};running=false;statusEl.textContent='Ready'}
+function reset(){score=0;lives=3;level=1;tickets=0;paddle={x:330,y:540,w:140,h:18,speed:8};buildBricks();resetBall();paused=false;document.getElementById('pauseBtn').textContent='Pause';updateHud()}
+function updateHud(){scoreEl.textContent=score;livesEl.textContent=lives;levelEl.textContent=level;ticketsEl.textContent=tickets}
+function launch(){if(paused)return;if(ball.stuck){ball.stuck=false;running=true;statusEl.textContent='Playing'}}
+function movePaddleTo(x){paddle.x=Math.max(8,Math.min(W-paddle.w-8,x-paddle.w/2));if(ball.stuck)ball.x=paddle.x+paddle.w/2}
+function rectHitCircle(b){const cx=Math.max(b.x,Math.min(ball.x,b.x+b.w)),cy=Math.max(b.y,Math.min(ball.y,b.y+b.h));const dx=ball.x-cx,dy=ball.y-cy;return dx*dx+dy*dy<ball.r*ball.r}
+function update(dt){if(paused)return;const dir=(keys.ArrowLeft||keys.a?-1:0)+(keys.ArrowRight||keys.d?1:0);if(dir)movePaddleTo(paddle.x+paddle.w/2+dir*paddle.speed*dt*60);if(ball.stuck){ball.x=paddle.x+paddle.w/2;return}ball.x+=ball.vx*dt*60;ball.y+=ball.vy*dt*60;if(ball.x<ball.r){ball.x=ball.r;ball.vx=Math.abs(ball.vx)}if(ball.x>W-ball.r){ball.x=W-ball.r;ball.vx=-Math.abs(ball.vx)}if(ball.y<ball.r){ball.y=ball.r;ball.vy=Math.abs(ball.vy)}if(rectHitCircle(paddle)&&ball.vy>0){const rel=(ball.x-(paddle.x+paddle.w/2))/(paddle.w/2);ball.vx=rel*7.5;ball.vy=-Math.abs(ball.vy);ball.y=paddle.y-ball.r-1}for(const b of bricks){if(!b.alive||!rectHitCircle(b))continue;b.alive=false;score+=10;ball.vy*=-1;updateHud();break}if(bricks.every(b=>!b.alive)){award(10+level*2);level++;buildBricks();resetBall();updateHud()}if(ball.y>H+30){lives--;updateHud();if(lives<=0){award(Math.max(2,Math.floor(score/100)));reset()}else resetBall()}}
+function rr(x,y,w,h,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function draw(){ctx.clearRect(0,0,W,H);const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0a1324');g.addColorStop(1,'#07101b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,.04)';for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}bricks.forEach(b=>{if(!b.alive)return;ctx.shadowColor=b.color;ctx.shadowBlur=12;rr(b.x,b.y,b.w,b.h,8,b.color);ctx.shadowBlur=0});rr(paddle.x,paddle.y,paddle.w,paddle.h,9,'#f7f8ff');ctx.shadowColor='#35d6ff';ctx.shadowBlur=18;ctx.fillStyle='#35d6ff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(paused){ctx.fillStyle='rgba(4,8,16,.56)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='800 36px system-ui';ctx.fillText('Paused',W/2,H/2)}}
+function loop(t){const dt=Math.min(.033,(t-last)/1000||0);last=t;update(dt);draw();requestAnimationFrame(loop)}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[e.key]=true;keys[k]=true;if(['arrowleft','arrowright',' ','enter'].includes(k))e.preventDefault();if(k===' '||k==='enter')launch();if(k==='p')togglePause();if(k==='r')reset()},{passive:false});document.addEventListener('keyup',e=>{keys[e.key]=false;keys[e.key.toLowerCase()]=false});
+function pointer(e){const r=canvas.getBoundingClientRect();movePaddleTo((e.clientX-r.left)/r.width*W)}
+canvas.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons)pointer(e)});canvas.addEventListener('pointerdown',e=>{pointer(e);launch()});canvas.addEventListener('contextmenu',e=>e.preventDefault());
+document.querySelectorAll('[data-move]').forEach(btn=>{let timer;const step=()=>{movePaddleTo(paddle.x+paddle.w/2+(btn.dataset.move==='left'?-28:28));timer=requestAnimationFrame(step)};btn.addEventListener('pointerdown',e=>{e.preventDefault();step()});['pointerup','pointerleave','pointercancel'].forEach(type=>btn.addEventListener(type,()=>cancelAnimationFrame(timer)))});
+function togglePause(){paused=!paused;statusEl.textContent=paused?'Paused':ball.stuck?'Ready':'Playing';document.getElementById('pauseBtn').textContent=paused?'Resume':'Pause'}
+document.getElementById('launchBtn').addEventListener('click',launch);document.getElementById('pauseBtn').addEventListener('click',togglePause);document.getElementById('resetBtn').addEventListener('click',reset);
+reset();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
