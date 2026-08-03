@@ -1,0 +1,65 @@
+name: Remove Eye Control
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-eye-control.yml'
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Remove Eye Control UI and copy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          shared = {
+              'games/asteroids.html', 'games/claw.html', 'games/bubble.html',
+              'games/racer.html', 'games/rhythm.html', 'games/blocks.html'
+          }
+
+          replacements = [
+              ('keyboard, mouse, touch, and optional Eye Control', 'keyboard, mouse, and touch'),
+              ('keyboard, mouse, touch, and Eye Control', 'keyboard, mouse, and touch'),
+              ('keyboard, mouse, or Eye Control', 'keyboard or mouse'),
+              ('keyboard, and Eye Control', 'and keyboard'),
+              (' and Eye Control support too', ' support too'),
+              (' and Eye Control', ''),
+              (', and Eye Control', ''),
+              (' or Eye Control', ''),
+              ('Eye Control targets', 'large controls'),
+              ('Eye Control dwell', 'large controls'),
+              ('Eye Control.', 'large controls.'),
+              ('Eye Control', 'Accessibility Mode'),
+          ]
+
+          for path in Path('.').rglob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              original = text
+
+              # Keep legacy handlers satisfied, but make the control impossible to see or activate.
+              text = re.sub(r'<button(?![^>]*\bhidden\b)([^>]*\bid=["\']eyeBtn["\'][^>]*)>', r'<button hidden aria-hidden="true" tabindex="-1"\1>', text)
+
+              # Shared-engine pages had the visible button removed already; restore only an inert hidden hook.
+              if path.as_posix() in shared and 'id="eyeBtn"' not in text:
+                  text = text.replace('<div class="btns">', '<div class="btns"><button hidden aria-hidden="true" tabindex="-1" class="btn" id="eyeBtn">Accessibility Mode</button>', 1)
+
+              for old, new in replacements:
+                  text = text.replace(old, new)
+
+              if text != original:
+                  path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html games
+          git diff --cached --quiet || git commit -m "Remove Eye Control UI and references"
+          git push
